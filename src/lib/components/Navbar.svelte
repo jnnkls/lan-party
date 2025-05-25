@@ -1,6 +1,10 @@
+<script lang="ts">
+	import logo from '/logo.png';
+</script>
+
 <div class="nav-container">
-	<div class="logo">
-		<div class="red"></div>
+	<div class="nav-element">
+		<img src={logo} alt="Logo" />
 	</div>
 
 	<nav>
@@ -11,8 +15,11 @@
 		<a href="/wheel">Wheel</a>
 	</nav>
 
-	<div class="pfp">
-		<div class="red"></div>
+	<div class="nav-element">
+		<div class="pfp">
+			<div class="pfp-head"></div>
+			<div class="pfp-body"></div>
+		</div>
 	</div>
 </div>
 
@@ -48,10 +55,38 @@
 		font-size: large;
 	}
 
-	.red {
-		background-color: red;
+	.pfp {
+		background-color: whitesmoke;
 		border-radius: 100%;
 
+		width: 100%;
+		height: 100%;
+
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+
+		gap: 0.125em;
+	}
+
+	.pfp > .pfp-head {
+		background-color: white;
+		border-radius: 100%;
+
+		width: 1em;
+		height: 1em;
+	}
+
+	.pfp > .pfp-body {
+		background-color: white;
+		border-radius: 100% 100% 0 0;
+
+		width: 1.25em;
+		height: 1.25em;
+	}
+
+	.nav-element {
 		height: var(--height);
 		width: var(--height);
 
