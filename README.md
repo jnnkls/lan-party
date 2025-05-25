@@ -33,10 +33,10 @@ With the LAN Party App, your LAN becomes more than just cables and cold pizza:
 
 - 👤 **Player Profiles**  
   Everyone gets a nerdy profile showing:
-    - Total LANs attended 👾
-    - Current title(s) like “Mario Kart Champ” or “Halo Destroyer” 🏅
-    - All tournament victories and placements
-    - Personal console collection 🎮🕹️
+  - Total LANs attended 👾
+  - Current title(s) like “Mario Kart Champ” or “Halo Destroyer” 🏅
+  - All tournament victories and placements
+  - Personal console collection 🎮🕹️
 
 <br/>
 
@@ -45,7 +45,6 @@ With the LAN Party App, your LAN becomes more than just cables and cold pizza:
 # SveltKit [WIP]
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
 
 ## Developing
 
