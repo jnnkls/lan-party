@@ -5,13 +5,14 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<script src="https://kit.fontawesome.com/9e348cec91.js" crossorigin="anonymous"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>(function(){try{var s=localStorage.getItem('theme');var d=s? s==='dark' : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; if(d) document.documentElement.classList.add('dark');}catch(e){}})();</script>
 		%sveltekit.head%
 	</head>
 	<body
 		data-sveltekit-preload-data="hover"
-		class="relative flex min-h-screen flex-col bg-white text-sm text-slate-800 sm:text-base"
+		class="relative flex min-h-screen flex-col bg-white text-sm text-slate-800 dark:bg-[#0b1220] dark:text-slate-200 sm:text-base"
 	>
-		<div class="bgGrid absolute inset-0 z-[-1] opacity-5"></div>
-		<div style="display: contents">%sveltekit.body%</div>
+		<div class="bgGrid absolute inset-0 z-[-1] opacity-5 dark:opacity-0"></div>
+		<div class="w-lvw">%sveltekit.body%</div>
 	</body>
 </html>
