@@ -1,13 +1,13 @@
 services:
   db:
-    image: mysql
+    image: postgres:16
     restart: always
     ports:
-      - 3306:3306
+      - 5432:5432
     environment:
-      MYSQL_ROOT_PASSWORD: mysecretpassword
-      MYSQL_DATABASE: local
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: local
     volumes:
-      - mysqldata:/var/lib/mysql
+      - pgdata:/var/lib/postgresql/data
 volumes:
-  mysqldata:
+  pgdata:

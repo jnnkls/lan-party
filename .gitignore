@@ -283,3 +283,12 @@ vite.config.ts.timestamp-*
 
 # Local machine-specific MCP config (e.g. WebStorm's local MCP bridge)
 .mcp.json
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Vitest coverage
+coverage/

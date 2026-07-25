@@ -1,38 +1,41 @@
 import {
-	mysqlTable,
-	int,
+	pgTable,
+	pgEnum,
+	integer,
 	varchar,
-	datetime,
+	timestamp,
 	text,
-	mysqlEnum,
 	primaryKey,
 	boolean
-} from 'drizzle-orm/mysql-core';
+} from 'drizzle-orm/pg-core';
 
-export const tenant = mysqlTable('tenant', {
+export const rarityEnum = pgEnum('rarity', ['common', 'rare', 'epic', 'legendary']);
+export const lanStatusEnum = pgEnum('lan_status', ['expired', 'ongoing', 'future']);
+
+export const tenant = pgTable('tenant', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	name: varchar('name', { length: 120 }).notNull(),
 	slug: varchar('slug', { length: 80 }).notNull().unique(),
-	createdAt: datetime('created_at').notNull()
+	createdAt: timestamp('created_at').notNull()
 });
 
-export const user = mysqlTable('user', {
+export const user = pgTable('user', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 }).references(() => tenant.id),
-	age: int('age'),
+	age: integer('age'),
 	username: varchar('username', { length: 32 }).notNull().unique(),
 	passwordHash: varchar('password_hash', { length: 255 }).notNull()
 });
 
-export const session = mysqlTable('session', {
+export const session = pgTable('session', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	expiresAt: datetime('expires_at').notNull()
+	expiresAt: timestamp('expires_at').notNull()
 });
 
-export const playerProfile = mysqlTable('player_profile', {
+export const playerProfile = pgTable('player_profile', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
 		.notNull()
@@ -41,12 +44,12 @@ export const playerProfile = mysqlTable('player_profile', {
 	username: varchar('username', { length: 32 }).notNull(),
 	avatarUrl: varchar('avatar_url', { length: 512 }),
 	activeTitle: varchar('active_title', { length: 120 }),
-	rarity: mysqlEnum('rarity', ['common', 'rare', 'epic', 'legendary']).notNull().default('common'),
-	xp: int('xp').notNull().default(0),
-	longestStreak: int('longest_streak').notNull().default(0)
+	rarity: rarityEnum('rarity').notNull().default('common'),
+	xp: integer('xp').notNull().default(0),
+	longestStreak: integer('longest_streak').notNull().default(0)
 });
 
-export const lanParty = mysqlTable('lan_party', {
+export const lanParty = pgTable('lan_party', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
 		.notNull()
@@ -56,12 +59,12 @@ export const lanParty = mysqlTable('lan_party', {
 	theme: varchar('theme', { length: 120 }),
 	location: varchar('location', { length: 160 }),
 	coverImage: varchar('cover_image', { length: 512 }),
-	startsAt: datetime('starts_at').notNull(),
-	endsAt: datetime('ends_at'),
-	status: mysqlEnum('status', ['expired', 'ongoing', 'future']).notNull().default('future')
+	startsAt: timestamp('starts_at').notNull(),
+	endsAt: timestamp('ends_at'),
+	status: lanStatusEnum('status').notNull().default('future')
 });
 
-export const lanAttendance = mysqlTable(
+export const lanAttendance = pgTable(
 	'lan_attendance',
 	{
 		lanId: varchar('lan_id', { length: 255 })
@@ -70,14 +73,14 @@ export const lanAttendance = mysqlTable(
 		playerId: varchar('player_id', { length: 255 })
 			.notNull()
 			.references(() => playerProfile.id),
-		joinedAt: datetime('joined_at').notNull(),
+		joinedAt: timestamp('joined_at').notNull(),
 		checkedIn: boolean('checked_in').notNull().default(false),
-		xpAwarded: int('xp_awarded').notNull().default(0)
+		xpAwarded: integer('xp_awarded').notNull().default(0)
 	},
 	(table) => [primaryKey({ columns: [table.lanId, table.playerId] })]
 );
 
-export const game = mysqlTable('game', {
+export const game = pgTable('game', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
 		.notNull()
@@ -86,7 +89,7 @@ export const game = mysqlTable('game', {
 	platform: varchar('platform', { length: 120 })
 });
 
-export const lanGame = mysqlTable(
+export const lanGame = pgTable(
 	'lan_game',
 	{
 		lanId: varchar('lan_id', { length: 255 })
@@ -99,7 +102,7 @@ export const lanGame = mysqlTable(
 	(table) => [primaryKey({ columns: [table.lanId, table.gameId] })]
 );
 
-export const consoleDevice = mysqlTable('console', {
+export const consoleDevice = pgTable('console', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
 		.notNull()
@@ -107,7 +110,7 @@ export const consoleDevice = mysqlTable('console', {
 	name: varchar('name', { length: 160 }).notNull()
 });
 
-export const lanConsole = mysqlTable(
+export const lanConsole = pgTable(
 	'lan_console',
 	{
 		lanId: varchar('lan_id', { length: 255 })
@@ -116,12 +119,12 @@ export const lanConsole = mysqlTable(
 		consoleId: varchar('console_id', { length: 255 })
 			.notNull()
 			.references(() => consoleDevice.id),
-		count: int('count').notNull().default(1)
+		count: integer('count').notNull().default(1)
 	},
 	(table) => [primaryKey({ columns: [table.lanId, table.consoleId] })]
 );
 
-export const playerGear = mysqlTable(
+export const playerGear = pgTable(
 	'player_gear',
 	{
 		playerId: varchar('player_id', { length: 255 })
@@ -130,12 +133,12 @@ export const playerGear = mysqlTable(
 		consoleId: varchar('console_id', { length: 255 })
 			.notNull()
 			.references(() => consoleDevice.id),
-		count: int('count').notNull().default(1)
+		count: integer('count').notNull().default(1)
 	},
 	(table) => [primaryKey({ columns: [table.playerId, table.consoleId] })]
 );
 
-export const tournament = mysqlTable('tournament', {
+export const tournament = pgTable('tournament', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
 		.notNull()
@@ -147,23 +150,23 @@ export const tournament = mysqlTable('tournament', {
 		.notNull()
 		.references(() => game.id),
 	name: varchar('name', { length: 160 }).notNull(),
-	startsAt: datetime('starts_at'),
+	startsAt: timestamp('starts_at'),
 	winnerPlayerId: varchar('winner_player_id', { length: 255 }).references(() => playerProfile.id)
 });
 
-export const tournamentMatch = mysqlTable('tournament_match', {
+export const tournamentMatch = pgTable('tournament_match', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tournamentId: varchar('tournament_id', { length: 255 })
 		.notNull()
 		.references(() => tournament.id),
-	round: int('round').notNull(),
+	round: integer('round').notNull(),
 	playerAId: varchar('player_a_id', { length: 255 }).references(() => playerProfile.id),
 	playerBId: varchar('player_b_id', { length: 255 }).references(() => playerProfile.id),
 	winnerPlayerId: varchar('winner_player_id', { length: 255 }).references(() => playerProfile.id),
 	score: varchar('score', { length: 40 })
 });
 
-export const title = mysqlTable('title', {
+export const title = pgTable('title', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
 		.notNull()
@@ -172,7 +175,7 @@ export const title = mysqlTable('title', {
 	source: varchar('source', { length: 160 })
 });
 
-export const playerTitle = mysqlTable(
+export const playerTitle = pgTable(
 	'player_title',
 	{
 		playerId: varchar('player_id', { length: 255 })
@@ -181,23 +184,23 @@ export const playerTitle = mysqlTable(
 		titleId: varchar('title_id', { length: 255 })
 			.notNull()
 			.references(() => title.id),
-		earnedAt: datetime('earned_at').notNull()
+		earnedAt: timestamp('earned_at').notNull()
 	},
 	(table) => [primaryKey({ columns: [table.playerId, table.titleId] })]
 );
 
-export const achievement = mysqlTable('achievement', {
+export const achievement = pgTable('achievement', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
 		.notNull()
 		.references(() => tenant.id),
 	name: varchar('name', { length: 120 }).notNull(),
 	description: text('description').notNull(),
-	xp: int('xp').notNull().default(0),
+	xp: integer('xp').notNull().default(0),
 	titleRewardId: varchar('title_reward_id', { length: 255 }).references(() => title.id)
 });
 
-export const playerAchievement = mysqlTable(
+export const playerAchievement = pgTable(
 	'player_achievement',
 	{
 		playerId: varchar('player_id', { length: 255 })
@@ -206,7 +209,7 @@ export const playerAchievement = mysqlTable(
 		achievementId: varchar('achievement_id', { length: 255 })
 			.notNull()
 			.references(() => achievement.id),
-		earnedAt: datetime('earned_at').notNull()
+		earnedAt: timestamp('earned_at').notNull()
 	},
 	(table) => [primaryKey({ columns: [table.playerId, table.achievementId] })]
 );

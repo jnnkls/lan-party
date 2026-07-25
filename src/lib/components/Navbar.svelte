@@ -59,8 +59,7 @@
 		border: 1px solid var(--border-strong);
 		border-radius: 4px;
 		background:
-			linear-gradient(135deg, var(--surface-raised), var(--accent) 64%),
-			var(--surface-raised);
+			linear-gradient(135deg, var(--surface-raised), var(--accent) 64%), var(--surface-raised);
 		padding: 0.25rem;
 		box-shadow: none;
 	}
