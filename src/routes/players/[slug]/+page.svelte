@@ -51,7 +51,7 @@
 	/>
 </section>
 
-<section class="mt-6 grid gap-6 lg:grid-cols-3">
+<section class="mt-6 grid gap-6 lg:grid-cols-4">
 	<div class="game-panel p-4 lg:col-span-1">
 		<div class="relative z-10">
 			<div class="quest-tag mb-3">
@@ -74,6 +74,34 @@
 				</ul>
 			{:else}
 				<div class="text-[var(--text-muted)]">No consoles listed.</div>
+			{/if}
+		</div>
+	</div>
+
+	<div class="game-panel p-4 lg:col-span-1">
+		<div class="relative z-10">
+			<div class="quest-tag mb-3">
+				<i class="fa-solid fa-compact-disc"></i>
+				<span>Game Library</span>
+			</div>
+			<h2 class="mb-3">Games owned</h2>
+
+			{#if player.games?.length}
+				<ul class="grid gap-2">
+					{#each player.games as g (g.name)}
+						<li class="loadout-row">
+							<div class="flex items-center gap-2">
+								<i class="fa-solid fa-compact-disc text-[var(--accent)]"></i>
+								<span>{g.name}</span>
+							</div>
+							{#if g.platform}
+								<span class="stat-chip">{g.platform}</span>
+							{/if}
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<div class="text-[var(--text-muted)]">No games in this library yet.</div>
 			{/if}
 		</div>
 	</div>

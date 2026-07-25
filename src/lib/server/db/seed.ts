@@ -641,6 +641,10 @@ async function seed() {
 		.values(achievements.map((a) => ({ ...a, tenantId: DEFAULT_TENANT_ID })));
 
 	console.log('Seeding players...');
+	// player_profile.xp is stored but no longer read directly — the query layer
+	// (getPlayers) computes real xp from lan_attendance.xpAwarded + earned
+	// achievement xp instead, so it can't drift from actual history. These
+	// seed values are just placeholders for the column, not what the UI shows.
 	await db.insert(table.playerProfile).values(
 		players.map((p) => ({
 			id: p.id,

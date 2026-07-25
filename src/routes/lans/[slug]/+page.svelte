@@ -101,8 +101,18 @@
 						<span>Game Queue</span>
 					</div>
 					<div class="mt-2 flex flex-wrap gap-2">
-						{#each lan.games as game (game)}
-							<span class="stat-chip"><i class="fa-solid fa-gamepad"></i>{game}</span>
+						{#each lan.gameCoverage as coverage (coverage.name)}
+							<span
+								class={`stat-chip ${coverage.ownedBy.length > 0 ? 'game-covered' : 'game-needed'}`}
+								title={coverage.ownedBy.length > 0
+									? `Covered by ${coverage.ownedBy.join(', ')}`
+									: 'No attendee owns this yet'}
+							>
+								<i
+									class={`fa-solid ${coverage.ownedBy.length > 0 ? 'fa-check' : 'fa-triangle-exclamation'}`}
+								></i>
+								{coverage.name}
+							</span>
 						{/each}
 					</div>
 				</div>
@@ -208,6 +218,16 @@
 </section>
 
 <style>
+	.game-covered {
+		border-color: color-mix(in srgb, var(--party-green) 55%, var(--border));
+		color: var(--party-green);
+	}
+
+	.game-needed {
+		border-color: color-mix(in srgb, var(--party-yellow) 55%, var(--border));
+		color: var(--party-yellow);
+	}
+
 	.tournament-card,
 	.match-row,
 	.gear-row {

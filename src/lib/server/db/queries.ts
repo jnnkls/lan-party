@@ -1,12 +1,14 @@
-import { count, eq, inArray } from 'drizzle-orm';
+import { count, eq, inArray, sum } from 'drizzle-orm';
 import { db } from './index';
 import * as table from './schema';
 import { DEFAULT_TENANT_ID } from '../tenant';
 import type {
 	Achievement,
+	GameCoverage,
 	LanDetail,
 	LanOverview,
 	LeaderboardEntry,
+	OwnedGame,
 	PlayerDetail,
 	TournamentOverview
 } from '$lib/types';
@@ -79,7 +81,7 @@ export async function getLanDetail(id: string): Promise<LanDetail | null> {
 
 	const [attendeeRows, gameRows, consoleRows] = await Promise.all([
 		db
-			.select({ username: table.playerProfile.username })
+			.select({ playerId: table.playerProfile.id, username: table.playerProfile.username })
 			.from(table.lanAttendance)
 			.innerJoin(table.playerProfile, eq(table.lanAttendance.playerId, table.playerProfile.id))
 			.where(eq(table.lanAttendance.lanId, id)),
@@ -95,7 +97,13 @@ export async function getLanDetail(id: string): Promise<LanDetail | null> {
 			.where(eq(table.lanConsole.lanId, id))
 	]);
 
-	const tournaments = await getTournamentsForLans([id]);
+	const [tournaments, gameCoverage] = await Promise.all([
+		getTournamentsForLans([id]),
+		getGameCoverageForAttendees(
+			gameRows.map((row) => row.name),
+			attendeeRows.map((row) => row.playerId)
+		)
+	]);
 
 	return {
 		id: lan.id,
@@ -111,8 +119,36 @@ export async function getLanDetail(id: string): Promise<LanDetail | null> {
 		games: gameRows.map((row) => row.name),
 		consoleNames: consoleRows.map((row) => row.name),
 		consoles: consoleRows,
-		tournaments: tournaments.get(id) ?? []
+		tournaments: tournaments.get(id) ?? [],
+		gameCoverage
 	};
+}
+
+// For each of a LAN's planned games, which attendees (if any) already own it —
+// lets the UI show "covered by X" vs "needed" instead of just a flat game list.
+async function getGameCoverageForAttendees(
+	gameNames: string[],
+	attendeePlayerIds: string[]
+): Promise<GameCoverage[]> {
+	if (gameNames.length === 0 || attendeePlayerIds.length === 0) {
+		return gameNames.map((name) => ({ name, ownedBy: [] }));
+	}
+
+	const rows = await db
+		.select({ username: table.playerProfile.username, gameName: table.game.name })
+		.from(table.playerGame)
+		.innerJoin(table.game, eq(table.playerGame.gameId, table.game.id))
+		.innerJoin(table.playerProfile, eq(table.playerGame.playerId, table.playerProfile.id))
+		.where(inArray(table.playerGame.playerId, attendeePlayerIds));
+
+	const ownersByGame = new Map<string, string[]>();
+	for (const row of rows) {
+		const list = ownersByGame.get(row.gameName);
+		if (list) list.push(row.username);
+		else ownersByGame.set(row.gameName, [row.username]);
+	}
+
+	return gameNames.map((name) => ({ name, ownedBy: ownersByGame.get(name) ?? [] }));
 }
 
 async function getTournamentsForLans(lanIds: string[]): Promise<Map<string, TournamentOverview[]>> {
@@ -217,6 +253,32 @@ async function getGearForPlayers(playerIds: string[]) {
 	for (const row of rows) {
 		const list = map.get(row.playerId);
 		const item = { name: row.name, count: row.count };
+		if (list) list.push(item);
+		else map.set(row.playerId, [item]);
+	}
+	return map;
+}
+
+async function getGamesForPlayers(playerIds: string[]) {
+	if (playerIds.length === 0) return new Map<string, OwnedGame[]>();
+	const rows = await db
+		.select({
+			playerId: table.playerGame.playerId,
+			name: table.game.name,
+			platform: table.playerGame.platform,
+			gamePlatform: table.game.platform
+		})
+		.from(table.playerGame)
+		.innerJoin(table.game, eq(table.playerGame.gameId, table.game.id))
+		.where(inArray(table.playerGame.playerId, playerIds));
+
+	const map = new Map<string, OwnedGame[]>();
+	for (const row of rows) {
+		const item: OwnedGame = {
+			name: row.name,
+			platform: row.platform ?? row.gamePlatform ?? undefined
+		};
+		const list = map.get(row.playerId);
 		if (list) list.push(item);
 		else map.set(row.playerId, [item]);
 	}
@@ -328,23 +390,62 @@ function winStreakFrom(longestStreak: number) {
 	return Math.max(1, Math.min(longestStreak, 6));
 }
 
+// Total XP is computed live from what a player has actually earned — LAN
+// attendance awards plus unlocked achievements — rather than trusted from the
+// player_profile.xp column, so it can never drift from real history.
+async function getXpForPlayers(playerIds: string[]): Promise<Map<string, number>> {
+	if (playerIds.length === 0) return new Map();
+
+	const [attendanceXp, achievementXp] = await Promise.all([
+		db
+			.select({ playerId: table.lanAttendance.playerId, total: sum(table.lanAttendance.xpAwarded) })
+			.from(table.lanAttendance)
+			.where(inArray(table.lanAttendance.playerId, playerIds))
+			.groupBy(table.lanAttendance.playerId),
+		db
+			.select({ playerId: table.playerAchievement.playerId, total: sum(table.achievement.xp) })
+			.from(table.playerAchievement)
+			.innerJoin(table.achievement, eq(table.playerAchievement.achievementId, table.achievement.id))
+			.where(inArray(table.playerAchievement.playerId, playerIds))
+			.groupBy(table.playerAchievement.playerId)
+	]);
+
+	const xpByPlayer = new Map<string, number>();
+	for (const row of attendanceXp) {
+		xpByPlayer.set(row.playerId, (xpByPlayer.get(row.playerId) ?? 0) + Number(row.total ?? 0));
+	}
+	for (const row of achievementXp) {
+		xpByPlayer.set(row.playerId, (xpByPlayer.get(row.playerId) ?? 0) + Number(row.total ?? 0));
+	}
+	return xpByPlayer;
+}
+
 export async function getPlayers(): Promise<PlayerDetail[]> {
 	const players = await getAllPlayers();
 	if (players.length === 0) return [];
 	const playerIds = players.map((p) => p.id);
 
-	const [gearByPlayer, titlesByPlayer, achievementsByPlayer, lansByPlayer, attendanceCounts] =
-		await Promise.all([
-			getGearForPlayers(playerIds),
-			getTitlesForPlayers(playerIds),
-			getAchievementsForPlayers(playerIds),
-			getAttendedLansForPlayers(playerIds),
-			db
-				.select({ playerId: table.lanAttendance.playerId, count: count() })
-				.from(table.lanAttendance)
-				.where(inArray(table.lanAttendance.playerId, playerIds))
-				.groupBy(table.lanAttendance.playerId)
-		]);
+	const [
+		gearByPlayer,
+		gamesByPlayer,
+		titlesByPlayer,
+		achievementsByPlayer,
+		lansByPlayer,
+		attendanceCounts,
+		xpByPlayer
+	] = await Promise.all([
+		getGearForPlayers(playerIds),
+		getGamesForPlayers(playerIds),
+		getTitlesForPlayers(playerIds),
+		getAchievementsForPlayers(playerIds),
+		getAttendedLansForPlayers(playerIds),
+		db
+			.select({ playerId: table.lanAttendance.playerId, count: count() })
+			.from(table.lanAttendance)
+			.where(inArray(table.lanAttendance.playerId, playerIds))
+			.groupBy(table.lanAttendance.playerId),
+		getXpForPlayers(playerIds)
+	]);
 	const attendanceByPlayer = new Map(attendanceCounts.map((row) => [row.playerId, row.count]));
 
 	return players
@@ -357,13 +458,14 @@ export async function getPlayers(): Promise<PlayerDetail[]> {
 				title: p.activeTitle ?? undefined,
 				titles: titlesByPlayer.get(p.id) ?? [],
 				rarity: p.rarity,
-				xp: p.xp,
+				xp: xpByPlayer.get(p.id) ?? 0,
 				achievements: achievementsByPlayer.get(p.id) ?? [],
 				attendanceCount: attendanceByPlayer.get(p.id) ?? 0,
 				winStreak: winStreakFrom(p.longestStreak),
 				longestStreak: p.longestStreak,
 				consoleCount: consoles.reduce((sum, c) => sum + c.count, 0),
 				consoles,
+				games: gamesByPlayer.get(p.id) ?? [],
 				attendedLANs: lansByPlayer.get(p.id) ?? []
 			} satisfies PlayerDetail;
 		})
