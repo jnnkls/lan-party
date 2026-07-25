@@ -6,14 +6,14 @@
 	type LanStatus = 'ongoing' | 'future' | 'expired';
 
 	let { data }: PageProps = $props();
-	const lans = data.lans;
+	const lans = $derived(data.lans);
 
-	const sorted = [...lans].sort((a, b) => +new Date(b.date) - +new Date(a.date));
+	const sorted = $derived([...lans].sort((a, b) => +new Date(b.date) - +new Date(a.date)));
 	const grouped = (status: LanStatus) => sorted.filter((lan) => lan.status === status);
 
 	let page = $state(1);
 	const pageSize = 6;
-	const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
+	const pageCount = $derived(Math.max(1, Math.ceil(sorted.length / pageSize)));
 	$effect(() => {
 		if (page > pageCount) page = pageCount;
 		if (page < 1) page = 1;

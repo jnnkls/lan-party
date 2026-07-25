@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { db } from './index';
 import * as table from './schema';
 import { DEFAULT_TENANT_ID } from '../tenant';
@@ -12,10 +12,21 @@ import {
 } from './queries';
 
 // Integration tests against a real PostgreSQL instance (no mocked DB) — see
-// docs/testing.md. Requires DATABASE_URL to point at a disposable database;
-// CI provides this via an ephemeral Postgres service container.
+// docs/testing.md. DATABASE_URL should point at a disposable database, but
+// every delete below is scoped to exactly the fixture rows this file creates
+// (never a blanket `db.delete(table.x)`) specifically so that running these
+// tests against a database that also holds real/seeded data — e.g. a shared
+// dev instance, not just CI's throwaway container — can't wipe it. An earlier
+// version of this file used unscoped deletes and did exactly that the first
+// time it ran against a real seeded database.
 
 const OTHER_TENANT_ID = 'other-tenant-test';
+const TEST_GAME_IDS = ['test-game-cs2', 'test-game-trackmania', 'test-game-other'];
+const TEST_PLAYER_IDS = ['test-p1', 'test-p2', 'test-p-other'];
+const TEST_LAN_IDS = ['test-lan-1', 'test-lan-other'];
+const TEST_ACHIEVEMENT_ID = 'test-ach-1';
+const TEST_TOURNAMENT_ID = 'test-t1';
+const TEST_MATCH_ID = 'test-m1';
 
 beforeAll(async () => {
 	// DEFAULT_TENANT_ID is shared across test files (each test file may run in
@@ -172,16 +183,18 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-	await db.delete(table.tournamentMatch);
-	await db.delete(table.tournament);
-	await db.delete(table.playerAchievement);
-	await db.delete(table.achievement);
-	await db.delete(table.playerGame);
-	await db.delete(table.lanGame);
-	await db.delete(table.lanAttendance);
-	await db.delete(table.lanParty);
-	await db.delete(table.playerProfile);
-	await db.delete(table.game);
+	await db.delete(table.tournamentMatch).where(eq(table.tournamentMatch.id, TEST_MATCH_ID));
+	await db.delete(table.tournament).where(eq(table.tournament.id, TEST_TOURNAMENT_ID));
+	await db
+		.delete(table.playerAchievement)
+		.where(eq(table.playerAchievement.achievementId, TEST_ACHIEVEMENT_ID));
+	await db.delete(table.achievement).where(eq(table.achievement.id, TEST_ACHIEVEMENT_ID));
+	await db.delete(table.playerGame).where(inArray(table.playerGame.playerId, TEST_PLAYER_IDS));
+	await db.delete(table.lanGame).where(inArray(table.lanGame.lanId, TEST_LAN_IDS));
+	await db.delete(table.lanAttendance).where(inArray(table.lanAttendance.lanId, TEST_LAN_IDS));
+	await db.delete(table.lanParty).where(inArray(table.lanParty.id, TEST_LAN_IDS));
+	await db.delete(table.playerProfile).where(inArray(table.playerProfile.id, TEST_PLAYER_IDS));
+	await db.delete(table.game).where(inArray(table.game.id, TEST_GAME_IDS));
 	// Leave DEFAULT_TENANT_ID alone — other integration test files rely on it
 	// existing too. Only clean up the tenant this file created.
 	await db.delete(table.tenant).where(eq(table.tenant.id, OTHER_TENANT_ID));

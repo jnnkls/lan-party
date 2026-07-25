@@ -13,14 +13,18 @@
 		showStats?: boolean;
 	} = $props();
 
-	const isJoinable =
-		lan.status === 'ongoing' || lan.status === 'future' || new Date(lan.date) >= new Date();
-	const actionLabel =
-		lan.status === 'expired' ? 'View Recap' : lan.status === 'ongoing' ? 'Join Live' : 'Ready Up';
-	const statusLabel =
-		lan.status === 'expired' ? 'Archived' : lan.status === 'ongoing' ? 'Live now' : 'Upcoming';
-	const statusClass =
-		lan.status === 'expired' ? 'expired' : lan.status === 'ongoing' ? '' : 'future';
+	const isJoinable = $derived(
+		lan.status === 'ongoing' || lan.status === 'future' || new Date(lan.date) >= new Date()
+	);
+	const actionLabel = $derived(
+		lan.status === 'expired' ? 'View Recap' : lan.status === 'ongoing' ? 'Join Live' : 'Ready Up'
+	);
+	const statusLabel = $derived(
+		lan.status === 'expired' ? 'Archived' : lan.status === 'ongoing' ? 'Live now' : 'Upcoming'
+	);
+	const statusClass = $derived(
+		lan.status === 'expired' ? 'expired' : lan.status === 'ongoing' ? '' : 'future'
+	);
 </script>
 
 <li class="quest-card lan-card">
