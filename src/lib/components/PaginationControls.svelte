@@ -1,8 +1,15 @@
 <script lang="ts">
-	export let page: number;
-	export let pageCount: number;
-	export let onPrev: () => void;
-	export let onNext: () => void;
+	let {
+		page,
+		pageCount,
+		onPrev,
+		onNext
+	}: {
+		page: number;
+		pageCount: number;
+		onPrev: () => void;
+		onNext: () => void;
+	} = $props();
 </script>
 
 <div class="game-panel mt-5 flex items-center justify-between gap-3 p-3">

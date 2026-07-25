@@ -74,7 +74,7 @@
 				<p class="text-[var(--text-muted)]">{lan.description}</p>
 			{/if}
 			<div class="flex flex-wrap gap-3">
-				<a href="/players" class="button !bg-[var(--accent)] !text-white">
+				<a href="/players" class="button !bg-[var(--accent)] !text-[var(--on-accent)]">
 					<i class="fa-solid fa-user-plus mr-2"></i>{lan.status === 'expired'
 						? 'View players'
 						: 'Join party'}
