@@ -10,7 +10,7 @@
 
 ```bash
 docker compose up -d
-pnpm db:push
+pnpm db:migrate   # applies the tracked drizzle/ migrations (use db:push instead only for quick local schema prototyping)
 pnpm test        # unit + integration
 pnpm db:seed      # e2e checks real content (leaderboard, LAN/player detail), not just empty states
 pnpm test:e2e     # end-to-end (builds + serves the app first)
@@ -18,8 +18,8 @@ pnpm test:e2e     # end-to-end (builds + serves the app first)
 
 ## CI
 
-- `.github/workflows/ci.yml` — type check, lint, `db:push` against an ephemeral Postgres service container, unit/integration tests, build. Runs on every push to `main` and every PR. Does **not** run `db:seed` — `queries.test.ts` seeds its own isolated fixture rows in `beforeAll`/`afterAll`, which would collide with the shared seed script's ids.
-- `.github/workflows/e2e.yml` — `db:push` + `db:seed`, then the Playwright suite against a built preview, same Postgres service container pattern.
+- `.github/workflows/ci.yml` — type check, lint, `db:migrate` against an ephemeral Postgres service container (proves the tracked migration files actually apply cleanly, not just that the schema _could_ be pushed), unit/integration tests, build. Runs on every push to `main` and every PR. Does **not** run `db:seed` — `queries.test.ts` seeds its own isolated fixture rows in `beforeAll`/`afterAll`, which would collide with the shared seed script's ids.
+- `.github/workflows/e2e.yml` — `db:migrate` + `db:seed`, then the Playwright suite against a built preview, same Postgres service container pattern.
 - `.github/workflows/codeql.yml` — static security analysis, on push/PR and a weekly schedule.
 
 ## Definition of ready
