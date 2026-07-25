@@ -1,7 +1,7 @@
-import { getLanOverviews } from '$lib/server/mock-data';
+import { getLanOverviews } from '$lib/server/db/queries';
 
-export const load = () => {
+export const load = async () => {
 	return {
-		lans: getLanOverviews()
+		lans: await getLanOverviews()
 	};
 };

@@ -6,7 +6,8 @@ import {
 	timestamp,
 	text,
 	primaryKey,
-	boolean
+	boolean,
+	unique
 } from 'drizzle-orm/pg-core';
 
 export const rarityEnum = pgEnum('rarity', ['common', 'rare', 'epic', 'legendary']);
@@ -24,7 +25,8 @@ export const user = pgTable('user', {
 	tenantId: varchar('tenant_id', { length: 255 }).references(() => tenant.id),
 	age: integer('age'),
 	username: varchar('username', { length: 32 }).notNull().unique(),
-	passwordHash: varchar('password_hash', { length: 255 }).notNull()
+	// Nullable: users who only ever sign in via an OIDC/OAuth provider have no password.
+	passwordHash: varchar('password_hash', { length: 255 })
 });
 
 export const session = pgTable('session', {
@@ -34,6 +36,20 @@ export const session = pgTable('session', {
 		.references(() => user.id),
 	expiresAt: timestamp('expires_at').notNull()
 });
+
+export const oauthAccount = pgTable(
+	'oauth_account',
+	{
+		id: varchar('id', { length: 255 }).primaryKey(),
+		userId: varchar('user_id', { length: 255 })
+			.notNull()
+			.references(() => user.id),
+		provider: varchar('provider', { length: 60 }).notNull(),
+		providerAccountId: varchar('provider_account_id', { length: 255 }).notNull(),
+		createdAt: timestamp('created_at').notNull()
+	},
+	(table) => [unique().on(table.provider, table.providerAccountId)]
+);
 
 export const playerProfile = pgTable('player_profile', {
 	id: varchar('id', { length: 255 }).primaryKey(),
@@ -138,6 +154,21 @@ export const playerGear = pgTable(
 	(table) => [primaryKey({ columns: [table.playerId, table.consoleId] })]
 );
 
+export const playerGame = pgTable(
+	'player_game',
+	{
+		playerId: varchar('player_id', { length: 255 })
+			.notNull()
+			.references(() => playerProfile.id),
+		gameId: varchar('game_id', { length: 255 })
+			.notNull()
+			.references(() => game.id),
+		platform: varchar('platform', { length: 120 }),
+		notes: varchar('notes', { length: 255 })
+	},
+	(table) => [primaryKey({ columns: [table.playerId, table.gameId] })]
+);
+
 export const tournament = pgTable('tournament', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	tenantId: varchar('tenant_id', { length: 255 })
@@ -217,5 +248,8 @@ export const playerAchievement = pgTable(
 export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;
 export type Tenant = typeof tenant.$inferSelect;
+export type OauthAccount = typeof oauthAccount.$inferSelect;
 export type PlayerProfile = typeof playerProfile.$inferSelect;
 export type LanParty = typeof lanParty.$inferSelect;
+export type Game = typeof game.$inferSelect;
+export type PlayerGame = typeof playerGame.$inferSelect;

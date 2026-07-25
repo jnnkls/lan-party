@@ -1,7 +1,7 @@
-import { getPlayers } from '$lib/server/mock-data';
+import { getPlayers } from '$lib/server/db/queries';
 
-export const load = () => {
+export const load = async () => {
 	return {
-		players: getPlayers()
+		players: await getPlayers()
 	};
 };
