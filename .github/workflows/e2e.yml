@@ -41,6 +41,9 @@ jobs:
       - name: Push schema to test database
         run: pnpm db:push --force
 
+      - name: Seed test database
+        run: pnpm db:seed
+
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 

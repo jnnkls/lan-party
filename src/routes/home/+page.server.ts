@@ -1,7 +1,7 @@
-import { getHomeEvents } from '$lib/server/mock-data';
+import { getHomeEvents } from '$lib/server/db/queries';
 
-export const load = () => {
+export const load = async () => {
 	return {
-		events: getHomeEvents()
+		events: await getHomeEvents()
 	};
 };

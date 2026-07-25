@@ -78,3 +78,10 @@ export type PlayerDetail = {
 	attendedLANs?: LanOverview[];
 	tournaments?: TournamentOverview[];
 };
+
+export type LeaderboardEntry = {
+	id: string;
+	username: string;
+	avatarUrl?: string;
+	score: number;
+};

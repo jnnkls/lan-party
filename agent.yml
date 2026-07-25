@@ -78,9 +78,9 @@ conventions:
     - Cards and buttons use small border-radius (2-3px) with 2px borders on major panels — chunky but not fully square corners.
   data:
     - Page data should be loaded through SvelteKit server load functions, not inline client-side arrays.
-    - Current mock data lives in src/lib/server/mock-data.ts and should mirror the real database shape.
-    - Replace mock repository functions with typed Drizzle/MySQL queries incrementally.
-    - Product model includes tenants, LAN parties, attendance, games, consoles/gear, tournaments, tournament matches, XP, achievements, and titles.
+    - There is no mock data anymore — every +page.server.ts queries Drizzle through src/lib/server/db/queries.ts, which maps rows into the view-model types in src/lib/types.ts. Add new query functions there, not ad hoc queries in route files.
+    - src/lib/server/db/seed.ts (pnpm db:seed) populates local/dev data; it's the reference for realistic sample content.
+    - Product model includes tenants, LAN parties, attendance, games, consoles/gear, personal game libraries (player_game), tournaments, tournament matches, XP, achievements, and titles.
   database:
     - PostgreSQL is configured through DATABASE_URL and docker-compose.yml exposes a local postgres database on port 5432.
     - Drizzle schema is in src/lib/server/db/schema.ts (drizzle-orm/pg-core: pgTable/pgEnum/timestamp/integer).

@@ -1,7 +1,7 @@
-import { getLeaderboard } from '$lib/server/mock-data';
+import { getLeaderboard } from '$lib/server/db/queries';
 
-export const load = () => {
+export const load = async () => {
 	return {
-		users: getLeaderboard()
+		users: await getLeaderboard()
 	};
 };

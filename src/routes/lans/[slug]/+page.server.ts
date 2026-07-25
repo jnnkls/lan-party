@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
-import { getLanDetail } from '$lib/server/mock-data';
+import { getLanDetail } from '$lib/server/db/queries';
 
-export const load = ({ params }) => {
-	const lan = getLanDetail(params.slug);
-	if (!lan) throw error(404, 'LAN not found');
+export const load = async ({ params }) => {
+	const lan = await getLanDetail(params.slug);
+	if (!lan) error(404, 'LAN not found');
 	return { lan };
 };
