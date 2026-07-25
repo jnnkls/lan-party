@@ -35,8 +35,8 @@
 				<div class="space-y-3">
 					<h1 class="font-display">Keep LAN nights alive</h1>
 					<p class="max-w-2xl text-lg leading-8 text-[var(--text-muted)]">
-						A shared hub for the next session, the people who show up, the score history, and
-						the archive of every night worth remembering.
+						A shared hub for the next session, the people who show up, the score history, and the
+						archive of every night worth remembering.
 					</p>
 				</div>
 
@@ -134,8 +134,7 @@
 	.hero-panel {
 		background:
 			linear-gradient(105deg, color-mix(in srgb, var(--accent) 26%, transparent), transparent 44%),
-			linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 26rem),
-			var(--surface);
+			linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 26rem), var(--surface);
 	}
 
 	.hero-panel :global(.font-display) {
