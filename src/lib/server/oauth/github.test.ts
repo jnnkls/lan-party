@@ -1,7 +1,8 @@
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import { DEFAULT_TENANT_ID } from '$lib/server/tenant';
 import { upsertGithubUser } from './github';
 
 // Integration test against a real PostgreSQL instance — see docs/testing.md.
@@ -10,6 +11,15 @@ import { upsertGithubUser } from './github';
 // that needs live GitHub credentials this environment doesn't have.
 
 const createdUserIds: string[] = [];
+
+beforeAll(async () => {
+	// DEFAULT_TENANT_ID may be shared with other integration test files running
+	// in the same suite — insert idempotently and never delete it.
+	await db
+		.insert(table.tenant)
+		.values({ id: DEFAULT_TENANT_ID, name: 'Default', slug: 'default', createdAt: new Date() })
+		.onConflictDoNothing();
+});
 
 afterAll(async () => {
 	for (const userId of createdUserIds) {

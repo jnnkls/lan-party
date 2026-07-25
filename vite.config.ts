@@ -9,6 +9,10 @@ export default defineConfig({
 		environment: 'jsdom',
 		setupFiles: ['./vitest-setup.ts'],
 		include: ['src/**/*.{test,spec}.{js,ts}'],
-		exclude: ['tests/e2e/**']
+		exclude: ['tests/e2e/**'],
+		// Integration test files share one real Postgres instance (no mocked DB)
+		// and don't isolate their fixture data per file (e.g. the DEFAULT_TENANT_ID
+		// row), so they must not run concurrently against it.
+		fileParallelism: false
 	}
 });

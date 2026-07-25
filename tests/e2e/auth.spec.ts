@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 function uniqueUsername() {
-	return `e2euser${Date.now().toString(36)}${Math.floor(Math.random() * 1000)}`;
+	return `e2euser${crypto.randomUUID().replace(/-/g, '').slice(0, 12)}`;
 }
 
 test('register, logout, and log back in', async ({ page }) => {

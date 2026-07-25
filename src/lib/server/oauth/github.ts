@@ -56,7 +56,7 @@ export async function upsertGithubUser(profile: GithubProfile): Promise<string> 
 			.from(table.user)
 			.where(eq(table.user.username, profile.login));
 		const username = usernameTaken
-			? `${profile.login}-${Math.random().toString(36).slice(2, 6)}`
+			? `${profile.login}-${auth.generateUserId().slice(0, 4)}`
 			: profile.login;
 
 		await tx.insert(table.user).values({

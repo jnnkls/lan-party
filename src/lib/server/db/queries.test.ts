@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import { db } from './index';
 import * as table from './schema';
 import { DEFAULT_TENANT_ID } from '../tenant';
@@ -17,10 +18,23 @@ import {
 const OTHER_TENANT_ID = 'other-tenant-test';
 
 beforeAll(async () => {
-	await db.insert(table.tenant).values([
-		{ id: DEFAULT_TENANT_ID, name: 'Default', slug: 'default', createdAt: new Date() },
-		{ id: OTHER_TENANT_ID, name: 'Other Tenant', slug: 'other-tenant', createdAt: new Date() }
-	]);
+	// DEFAULT_TENANT_ID is shared across test files (each test file may run in
+	// its own worker against the same database) — insert idempotently and
+	// never delete it below, or other suites relying on it can fail depending
+	// on file execution order.
+	await db
+		.insert(table.tenant)
+		.values({ id: DEFAULT_TENANT_ID, name: 'Default', slug: 'default', createdAt: new Date() })
+		.onConflictDoNothing();
+	await db
+		.insert(table.tenant)
+		.values({
+			id: OTHER_TENANT_ID,
+			name: 'Other Tenant',
+			slug: 'other-tenant',
+			createdAt: new Date()
+		})
+		.onConflictDoNothing();
 
 	await db.insert(table.game).values([
 		{ id: 'test-game-cs2', tenantId: DEFAULT_TENANT_ID, name: 'Counter-Strike 2', platform: 'PC' },
@@ -134,7 +148,9 @@ afterAll(async () => {
 	await db.delete(table.lanParty);
 	await db.delete(table.playerProfile);
 	await db.delete(table.game);
-	await db.delete(table.tenant);
+	// Leave DEFAULT_TENANT_ID alone — other integration test files rely on it
+	// existing too. Only clean up the tenant this file created.
+	await db.delete(table.tenant).where(eq(table.tenant.id, OTHER_TENANT_ID));
 });
 
 describe('getLanOverviews', () => {
