@@ -71,19 +71,21 @@ conventions:
     - Current product direction is a playful operations dashboard: friendly LAN command center, collectible player cards, XP bars, high-score podiums, status dots, and structured event/detail surfaces.
     - The logo should stay prominent in the nav; do not shrink it back to a tiny icon.
     - Use only the fixed .grid-bg overlay grid for the page background; do not add a second grid in body backgrounds.
-    - Use Press Start 2P for headings, nav, buttons, badges, and compact display text.
+    - Use Press Start 2P for headings, nav, buttons, badges, and compact display text; always set font-weight: 400 on Press Start 2P text since it has no bold cut (avoids browser faux-bold).
     - Keep body copy and dense content readable with Open Sans.
-    - Avoid hardcoding slate/amber theme colors in new UI; use var(--text), var(--text-muted), var(--surface), var(--surface-muted), var(--surface-sunken), var(--border), and var(--accent).
+    - Avoid hardcoding slate/amber theme colors in new UI; use var(--text), var(--text-muted), var(--surface), var(--surface-muted), var(--surface-sunken), var(--border), and var(--accent). There is no leftover Tailwind slate/amber compatibility shim in app.css anymore — don't reintroduce one; fix the component instead.
+    - Panel/card/button shadows use the hard-edged, non-blurred --shadow/--pixel-shadow/--glow tokens (stepped offsets, no blur) for a pixel-cabinet look, not soft glows.
+    - Cards and buttons use small border-radius (2-3px) with 2px borders on major panels — chunky but not fully square corners.
   data:
     - Page data should be loaded through SvelteKit server load functions, not inline client-side arrays.
     - Current mock data lives in src/lib/server/mock-data.ts and should mirror the real database shape.
     - Replace mock repository functions with typed Drizzle/MySQL queries incrementally.
     - Product model includes tenants, LAN parties, attendance, games, consoles/gear, tournaments, tournament matches, XP, achievements, and titles.
   database:
-    - MySQL is configured through DATABASE_URL and docker-compose.yml exposes a local mysql database on port 3306.
-    - Drizzle schema is in src/lib/server/db/schema.ts.
+    - PostgreSQL is configured through DATABASE_URL and docker-compose.yml exposes a local postgres database on port 5432.
+    - Drizzle schema is in src/lib/server/db/schema.ts (drizzle-orm/pg-core: pgTable/pgEnum/timestamp/integer).
     - Use pnpm db:generate after schema changes, pnpm db:migrate to apply generated migrations, and pnpm db:push only for local schema prototyping.
-    - Keep multi-tenant fields on new persisted models unless a table is strictly global.
+    - Keep multi-tenant fields on new persisted models unless a table is strictly global; there is no multi-tenant UI yet, queries scope to a single seeded DEFAULT_TENANT_ID.
   accessibility:
     - Keep interactive controls as semantic buttons or links.
     - Preserve aria-labels on card overlay links and icon-only controls.

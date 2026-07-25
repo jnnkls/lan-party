@@ -264,20 +264,20 @@
 		display: inline-flex;
 		align-items: center;
 		border: 1px solid var(--border);
-		border-radius: 3px;
+		border-radius: 2px;
 		background: var(--surface);
 		color: var(--text-muted);
 		padding: 0.35rem 0.55rem;
-		font-family: 'Open Sans', system-ui, sans-serif;
-		font-size: 0.7rem;
-		font-weight: 800;
-		line-height: 1.4;
+		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+		font-size: 0.6rem;
+		font-weight: 400;
+		line-height: 1.6;
 		text-transform: uppercase;
 	}
 
 	.placement-badge.first {
 		background: var(--accent);
-		color: white;
+		color: var(--on-accent);
 	}
 
 	.placement-badge.second {

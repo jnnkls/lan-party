@@ -1,7 +1,13 @@
 <script lang="ts">
-	export let src: string | undefined = undefined;
-	export let alt: string = '';
-	export let fallbackText: string = 'No image';
+	let {
+		src = undefined,
+		alt = '',
+		fallbackText = 'No image'
+	}: {
+		src?: string;
+		alt?: string;
+		fallbackText?: string;
+	} = $props();
 </script>
 
 <div class="relative h-full w-full overflow-hidden bg-[var(--surface-muted)]">

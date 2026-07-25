@@ -169,8 +169,8 @@
 			transform 2s ease-in-out,
 			border-color 0.2s,
 			background 0.2s;
-		font-weight: 700;
-		font-size: 1rem;
+		font-weight: 400;
+		font-size: 0.85rem;
 		color: white;
 		padding: 0;
 		text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
@@ -205,9 +205,9 @@
 	}
 
 	.result span {
-		font-family: 'Open Sans', system-ui, sans-serif;
-		font-size: 0.78rem;
-		font-weight: 800;
+		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+		font-size: 0.62rem;
+		font-weight: 400;
 		color: var(--accent);
 		text-transform: uppercase;
 	}

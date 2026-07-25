@@ -1,6 +1,5 @@
 <script lang="ts">
-	export let dateIso: string;
-	export let endedLabel: string = 'Ended';
+	let { dateIso, endedLabel = 'Ended' }: { dateIso: string; endedLabel?: string } = $props();
 	const now = new Date();
 	const isEnded = (iso: string) => new Date(iso) < now;
 	const formatDate = (iso: string) =>
@@ -26,14 +25,14 @@
 		display: inline-flex;
 		align-items: center;
 		border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border-strong));
-		border-radius: 3px;
+		border-radius: 2px;
 		background: var(--accent);
-		color: white;
+		color: var(--on-accent);
 		padding: 0.45rem 0.7rem;
-		font-family: 'Open Sans', system-ui, sans-serif;
-		font-size: 0.7rem;
-		font-weight: 800;
-		line-height: 1.5;
+		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+		font-size: 0.58rem;
+		font-weight: 400;
+		line-height: 1.6;
 		text-transform: uppercase;
 		box-shadow: none;
 	}

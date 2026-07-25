@@ -1,16 +1,29 @@
 <script lang="ts">
 	import type { Rarity } from '$lib/types';
 
-	export let id: string;
-	export let username: string;
-	export let avatarUrl: string = 'https://i.pravatar.cc/100';
-	export let title: string = '';
-	export let rarity: Rarity = 'common';
-	export let attendanceCount: number = 0;
-	export let winStreak: number = 0;
-	export let consoleCount: number = 0;
-	export let xp: number = 0;
-	export let rank: number;
+	let {
+		id,
+		username,
+		avatarUrl = 'https://i.pravatar.cc/100',
+		title = '',
+		rarity = 'common',
+		attendanceCount = 0,
+		winStreak = 0,
+		consoleCount = 0,
+		xp = 0,
+		rank
+	}: {
+		id: string;
+		username: string;
+		avatarUrl?: string;
+		title?: string;
+		rarity?: Rarity;
+		attendanceCount?: number;
+		winStreak?: number;
+		consoleCount?: number;
+		xp?: number;
+		rank: number;
+	} = $props();
 
 	const level = () => Math.max(1, Math.floor(xp / 250) + 1);
 	const progress = () => Math.min(100, Math.round(((xp % 250) / 250) * 100));
@@ -47,7 +60,7 @@
 				class="absolute inset-0 h-full w-full object-cover"
 			/>
 			<div
-				class="font-display absolute top-3 left-3 rounded-[3px] bg-[var(--accent)] px-2 py-1 text-[0.75rem] text-white"
+				class="font-display absolute top-3 left-3 rounded-[3px] bg-[var(--accent)] px-2 py-1 text-[0.75rem] text-[var(--on-accent)]"
 			>
 				#{rank}
 			</div>
@@ -133,21 +146,22 @@
 		border: 1px solid var(--accent);
 		border-radius: 4px;
 		background: var(--accent);
-		color: white;
+		color: var(--on-accent);
 		padding: 0.45rem;
 		box-shadow: none;
 	}
 
 	.level-badge span {
-		font-family: 'Open Sans', system-ui, sans-serif;
-		font-size: 0.58rem;
-		font-weight: 800;
+		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+		font-size: 0.5rem;
+		font-weight: 400;
 	}
 
 	.level-badge strong {
-		font-family: 'Open Sans', system-ui, sans-serif;
-		font-size: 1.25rem;
-		line-height: 1;
+		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+		font-weight: 400;
+		font-size: 1.1rem;
+		line-height: 1.3;
 	}
 
 	.xp-block {

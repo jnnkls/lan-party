@@ -3,9 +3,15 @@
 	import ImageFill from './ImageFill.svelte';
 	import type { LanOverview } from '$lib/types';
 
-	export let lan: LanOverview;
-	export let clickable: boolean = true;
-	export let showStats: boolean = true;
+	let {
+		lan,
+		clickable = true,
+		showStats = true
+	}: {
+		lan: LanOverview;
+		clickable?: boolean;
+		showStats?: boolean;
+	} = $props();
 
 	const isJoinable =
 		lan.status === 'ongoing' || lan.status === 'future' || new Date(lan.date) >= new Date();

@@ -9,54 +9,57 @@
 html {
 	scroll-behavior: smooth;
 	color-scheme: dark;
-	--accent: #e53935;
-	--accent-strong: #ff4a45;
-	--accent-soft: rgba(229, 57, 53, 0.16);
+	--accent: #ff7f50;
+	--accent-strong: #ff9466;
+	--accent-soft: rgba(255, 127, 80, 0.18);
+	/* Text color for content placed on a solid accent/party-color background —
+	   those colors are all too bright for white text to hit WCAG AA contrast. */
+	--on-accent: #14161a;
 	--party-blue: #7ea7ff;
 	--party-green: #58d68d;
 	--party-yellow: #f6c85f;
 	--party-pink: #f05b78;
 	--party-purple: #9d7cff;
-	--dark: #050505;
-	--cabinet: #111111;
-	--cabinet-deep: #050505;
-	--bg: #050505;
-	--bg-accent: #101010;
-	--surface: #111111;
-	--surface-muted: #181818;
-	--surface-raised: #202020;
-	--surface-sunken: #090909;
-	--surface-hover: #292929;
-	--border: rgba(255, 255, 255, 0.12);
-	--border-strong: rgba(255, 255, 255, 0.28);
-	--text: #f7f7f2;
-	--text-muted: #b7b7ad;
-	--grid: rgba(255, 255, 255, 0.055);
-	--shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-	--pixel-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+	--dark: #202325;
+	--cabinet: #35393c;
+	--cabinet-deep: #202325;
+	--bg: #23262a;
+	--bg-accent: #2b2e32;
+	--surface: #35393c;
+	--surface-muted: #3d4145;
+	--surface-raised: #454a4f;
+	--surface-sunken: #1c1e20;
+	--surface-hover: #4d5257;
+	--border: rgba(255, 255, 255, 0.14);
+	--border-strong: rgba(255, 255, 255, 0.3);
+	--text: #f5f3ee;
+	--text-muted: #b9b6ad;
+	--grid: rgba(255, 255, 255, 0.06);
+	--shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.45);
+	--pixel-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.4);
 	--panel-gradient: linear-gradient(180deg, var(--surface-raised), var(--surface));
 	--panel-accent: linear-gradient(90deg, var(--accent), transparent);
-	--glow: 0 0 0 1px rgba(229, 57, 53, 0.36), 0 22px 60px rgba(229, 57, 53, 0.16);
+	--glow: 3px 3px 0 0 var(--accent);
 }
 
 html.dark {
 	color-scheme: dark;
-	--bg: #050505;
-	--bg-accent: #101010;
-	--surface: #111111;
-	--surface-muted: #181818;
-	--surface-raised: #202020;
-	--surface-sunken: #090909;
-	--surface-hover: #292929;
-	--border: rgba(255, 255, 255, 0.12);
-	--border-strong: rgba(255, 255, 255, 0.28);
-	--text: #f7f7f2;
-	--text-muted: #b7b7ad;
-	--grid: rgba(255, 255, 255, 0.055);
-	--shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-	--pixel-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+	--bg: #23262a;
+	--bg-accent: #2b2e32;
+	--surface: #35393c;
+	--surface-muted: #3d4145;
+	--surface-raised: #454a4f;
+	--surface-sunken: #1c1e20;
+	--surface-hover: #4d5257;
+	--border: rgba(255, 255, 255, 0.14);
+	--border-strong: rgba(255, 255, 255, 0.3);
+	--text: #f5f3ee;
+	--text-muted: #b9b6ad;
+	--grid: rgba(255, 255, 255, 0.06);
+	--shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.45);
+	--pixel-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.4);
 	--panel-gradient: linear-gradient(180deg, var(--surface-raised), var(--surface));
-	--glow: 0 0 0 1px rgba(229, 57, 53, 0.36), 0 22px 60px rgba(229, 57, 53, 0.16);
+	--glow: 3px 3px 0 0 var(--accent);
 }
 
 * {
@@ -73,32 +76,32 @@ h2,
 h3,
 .page-title,
 .font-display {
-	font-family: 'Open Sans', system-ui, sans-serif;
-	letter-spacing: 0;
-	line-height: 0.98;
-	font-weight: 800;
+	font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+	letter-spacing: 0.01em;
+	line-height: 1.35;
+	font-weight: 400;
 	text-transform: uppercase;
 }
 
 h1,
 .page-title {
-	font-size: clamp(2.75rem, 8vw, 7.2rem);
+	font-size: clamp(1.4rem, 4vw, 2.75rem);
 }
 
 h2 {
-	font-size: clamp(2rem, 4.5vw, 4.5rem);
+	font-size: clamp(1.05rem, 2.8vw, 1.75rem);
 }
 
 h3 {
-	font-size: clamp(1.1rem, 2vw, 1.75rem);
-	line-height: 1.08;
+	font-size: clamp(0.7rem, 1.6vw, 1rem);
+	line-height: 1.5;
 }
 
 body {
 	color: var(--text);
 	background:
-		linear-gradient(120deg, rgba(229, 57, 53, 0.18), transparent 28rem),
-		linear-gradient(180deg, #101010, var(--bg) 24rem);
+		linear-gradient(120deg, rgba(255, 127, 80, 0.16), transparent 28rem),
+		linear-gradient(180deg, var(--bg-accent), var(--bg) 24rem);
 	background-attachment: fixed;
 	transition:
 		background-color 0.2s,
@@ -107,8 +110,8 @@ body {
 
 .dark body {
 	background:
-		linear-gradient(120deg, rgba(229, 57, 53, 0.18), transparent 28rem),
-		linear-gradient(180deg, #101010, var(--bg) 24rem);
+		linear-gradient(120deg, rgba(255, 127, 80, 0.16), transparent 28rem),
+		linear-gradient(180deg, var(--bg-accent), var(--bg) 24rem);
 	background-attachment: fixed;
 }
 
@@ -157,12 +160,14 @@ body {
 
 button,
 .button {
-	border-radius: 4px;
-	border: 1px solid var(--border-strong);
+	border-radius: 2px;
+	border: 2px solid var(--border-strong);
 	padding: 0.85em 1.2em;
-	font-size: 0.78em;
-	font-weight: 800;
-	font-family: 'Open Sans', system-ui, sans-serif;
+	font-size: 0.68em;
+	font-weight: 400;
+	font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+	line-height: 1.4;
+	letter-spacing: 0.01em;
 	text-transform: uppercase;
 	background: var(--surface-raised);
 	color: var(--text);
@@ -178,11 +183,17 @@ button,
 
 nav a,
 .theme-toggle,
-.tabular-nums,
 .rounded-full,
 .text-xs.uppercase,
 .text-xs.tracking-wide {
-	font-family: 'Open Sans', system-ui, sans-serif;
+	font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.01em;
+}
+
+.tabular-nums {
+	font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+	font-weight: 400;
 	letter-spacing: 0;
 }
 
@@ -212,8 +223,8 @@ button:active,
 .game-panel,
 .quest-card {
 	position: relative;
-	border: 1px solid var(--border);
-	border-radius: 6px;
+	border: 2px solid var(--border);
+	border-radius: 3px;
 	background:
 		linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 34%),
 		var(--panel-gradient);
@@ -258,14 +269,14 @@ button:active,
 	gap: 0.45rem;
 	width: fit-content;
 	border: 1px solid var(--border);
-	border-radius: 3px;
+	border-radius: 2px;
 	background: color-mix(in srgb, var(--surface-muted) 86%, transparent);
 	color: var(--text);
 	padding: 0.4rem 0.65rem;
-	font-size: 0.72rem;
-	font-family: 'Open Sans', system-ui, sans-serif;
-	font-weight: 800;
-	line-height: 1.5;
+	font-size: 0.6rem;
+	font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+	font-weight: 400;
+	line-height: 1.6;
 	text-transform: uppercase;
 }
 
@@ -286,8 +297,8 @@ button:active,
 .screen-header {
 	position: relative;
 	margin-block: 1rem;
-	border: 1px solid var(--border);
-	border-radius: 6px;
+	border: 2px solid var(--border);
+	border-radius: 3px;
 	background:
 		linear-gradient(120deg, color-mix(in srgb, var(--accent) 18%, transparent), transparent 42%),
 		var(--panel-gradient);
@@ -334,10 +345,10 @@ button:active,
 	gap: 0.45rem;
 	width: fit-content;
 	color: var(--accent-strong);
-	font-family: 'Open Sans', system-ui, sans-serif;
-	font-size: 0.78rem;
-	font-weight: 800;
-	line-height: 1.5;
+	font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+	font-size: 0.62rem;
+	font-weight: 400;
+	line-height: 1.6;
 	text-transform: uppercase;
 }
 
@@ -350,8 +361,8 @@ button:active,
 .metric-card,
 .empty-state {
 	position: relative;
-	border: 1px solid var(--border);
-	border-radius: 6px;
+	border: 2px solid var(--border);
+	border-radius: 3px;
 	background:
 		linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 42%),
 		var(--surface);
@@ -370,9 +381,10 @@ button:active,
 }
 
 .metric-card strong {
-	font-family: 'Open Sans', system-ui, sans-serif;
-	font-size: clamp(2rem, 4vw, 3.4rem);
-	line-height: 0.9;
+	font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+	font-weight: 400;
+	font-size: clamp(1.5rem, 3vw, 2.4rem);
+	line-height: 1.2;
 	color: var(--text);
 }
 
@@ -429,8 +441,8 @@ button:active,
 	gap: 0.45rem;
 	width: fit-content;
 	max-width: 100%;
-	border: 1px solid var(--border-strong);
-	border-radius: 6px;
+	border: 2px solid var(--border-strong);
+	border-radius: 3px;
 	background: var(--surface-sunken);
 	padding: 0.35rem;
 	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
@@ -446,7 +458,7 @@ button:active,
 .segmented-control button:hover,
 .segmented-control button.active {
 	background: linear-gradient(135deg, var(--accent), var(--party-pink));
-	color: white;
+	color: var(--on-accent);
 	box-shadow: 3px 3px 0 color-mix(in srgb, var(--dark) 22%, transparent);
 }
 
@@ -466,8 +478,8 @@ input[type='url'],
 input:not([type]),
 textarea,
 select {
-	border: 1px solid var(--border);
-	border-radius: 4px;
+	border: 2px solid var(--border);
+	border-radius: 2px;
 	padding: 0.55em 0.85em;
 	font-size: 0.95em;
 	background: var(--surface);
@@ -488,71 +500,5 @@ select:focus {
 
 ::selection {
 	background: var(--accent);
-	color: white;
-}
-
-/* Compatibility layer for older Tailwind classes still used in route markup. */
-.bg-white,
-.bg-white\/80,
-.dark .dark\:bg-slate-800,
-.dark .dark\:bg-slate-800\/70,
-html[data-theme='light'] .dark\:bg-slate-800,
-html[data-theme='light'] .dark\:bg-slate-800\/70 {
-	background-color: var(--surface) !important;
-}
-
-.bg-slate-50,
-.bg-slate-100,
-.bg-slate-200,
-.dark .dark\:from-slate-900,
-.dark .dark\:via-slate-900,
-.dark .dark\:to-slate-900 {
-	background-color: var(--surface-muted) !important;
-}
-
-.border-slate-200,
-.border-slate-300,
-.dark .dark\:border-slate-700,
-html[data-theme='light'] .dark\:border-slate-700 {
-	border-color: var(--border) !important;
-}
-
-.text-slate-800,
-.text-slate-900,
-.dark .dark\:text-slate-100,
-.dark .dark\:text-slate-200,
-html[data-theme='light'] .dark\:text-slate-100,
-html[data-theme='light'] .dark\:text-slate-200 {
-	color: var(--text) !important;
-}
-
-.text-slate-300,
-.text-slate-400,
-.text-slate-500,
-.text-slate-600,
-.text-slate-700,
-.dark .dark\:text-slate-300,
-html[data-theme='light'] .dark\:text-slate-300 {
-	color: var(--text-muted) !important;
-}
-
-.bg-amber-400,
-.bg-amber-400\/90,
-.bg-amber-500,
-.\!bg-amber-500 {
-	background-color: var(--accent) !important;
-}
-
-.hover\:\!bg-amber-600:hover {
-	background-color: var(--accent-strong) !important;
-}
-
-.text-amber-400,
-.text-amber-500,
-.text-indigo-500 {
-	color: var(--accent) !important;
-}
-
-.focus\:outline-amber-500:focus {
-	outline-color: var(--accent) !important;
+	color: var(--on-accent);
 }

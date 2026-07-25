@@ -2,10 +2,17 @@
 	import ImageFill from './ImageFill.svelte';
 	import type { LanEvent } from '$lib/types';
 
-	export let next: LanEvent | null = null;
-	export let liveCount: number = 0;
-	export let upcomingCount: number = 0;
-	export let archiveCount: number = 0;
+	let {
+		next = null,
+		liveCount = 0,
+		upcomingCount = 0,
+		archiveCount = 0
+	}: {
+		next?: LanEvent | null;
+		liveCount?: number;
+		upcomingCount?: number;
+		archiveCount?: number;
+	} = $props();
 
 	const formatDate = (date: string) =>
 		new Date(date).toLocaleString(undefined, {
@@ -82,7 +89,7 @@
 				</div>
 
 				<div class="flex flex-wrap gap-3">
-					<a href={`/lans/${next.id}`} class="button !bg-[var(--accent)] !text-white">
+					<a href={`/lans/${next.id}`} class="button !bg-[var(--accent)] !text-[var(--on-accent)]">
 						<i class="fa-solid fa-door-open mr-2"></i>Join event
 					</a>
 					<a href="/lans" class="button">

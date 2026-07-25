@@ -94,9 +94,9 @@
 	}
 
 	nav > a {
-		font-family: 'Open Sans', system-ui, sans-serif;
-		font-size: 0.74rem;
-		font-weight: 800;
+		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+		font-size: 0.6rem;
+		font-weight: 400;
 		color: var(--text-muted);
 		text-decoration: none;
 		display: inline-flex;
@@ -116,7 +116,7 @@
 	}
 
 	nav > a.active {
-		color: white;
+		color: var(--on-accent);
 		background: var(--accent);
 		box-shadow: none;
 	}
@@ -135,10 +135,10 @@
 		align-items: center;
 		justify-content: center;
 		gap: 0.45rem;
-		color: white;
-		font-family: 'Open Sans', system-ui, sans-serif;
-		font-size: 0.76rem;
-		font-weight: 800;
+		color: var(--on-accent);
+		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
+		font-size: 0.6rem;
+		font-weight: 400;
 		text-transform: uppercase;
 		box-shadow: none;
 

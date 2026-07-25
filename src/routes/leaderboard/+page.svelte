@@ -93,7 +93,7 @@
 										? 'h-12 w-full rounded-xl bg-[var(--party-blue)] shadow sm:h-12'
 										: 'h-4 w-full rounded-xl bg-[var(--party-pink)] shadow sm:h-4'}
 							>
-								<span class="font-display text-white">#{idx + 1}</span>
+								<span class="font-display text-[var(--on-accent)]">#{idx + 1}</span>
 							</div>
 						</div>
 					{/if}
