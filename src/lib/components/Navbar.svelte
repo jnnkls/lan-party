@@ -2,6 +2,8 @@
 	import { page } from '$app/state';
 	import logo from '/logo.png';
 
+	let { user }: { user: { id: string; username: string } | null } = $props();
+
 	const links = [
 		{ href: '/home', label: 'Campaign', icon: 'fa-house' },
 		{ href: '/leaderboard', label: 'Leaderboard', icon: 'fa-ranking-star' },
@@ -28,9 +30,24 @@
 		{/each}
 	</nav>
 
-	<div class="party-status" aria-hidden="true">
-		<i class="fa-solid fa-signal"></i>
-		<span>Live</span>
+	<div class="account-area">
+		{#if user}
+			<a href="/players" class="stat-chip account-username">
+				<i class="fa-solid fa-user"></i>
+				<span>{user.username}</span>
+			</a>
+			<form method="POST" action="/logout">
+				<button type="submit" class="account-action">
+					<i class="fa-solid fa-right-from-bracket"></i>
+					<span>Logout</span>
+				</button>
+			</form>
+		{:else}
+			<a href="/login" class="account-action">
+				<i class="fa-solid fa-right-to-bracket"></i>
+				<span>Login</span>
+			</a>
+		{/if}
 	</div>
 </header>
 
@@ -121,25 +138,41 @@
 		box-shadow: none;
 	}
 
-	.party-status {
+	.account-area {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-shrink: 0;
+	}
+
+	.account-area form {
+		display: contents;
+	}
+
+	.account-username {
+		text-decoration: none;
+	}
+
+	.account-action {
 		background-color: var(--accent);
-		backdrop-filter: blur(8px);
 		border: 1px solid var(--accent);
 		border-radius: 4px;
 
 		height: var(--height);
-		min-width: 5rem;
 		flex-shrink: 0;
 
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 0.45rem;
+		padding: 0 0.85rem;
 		color: var(--on-accent);
 		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
 		font-size: 0.6rem;
 		font-weight: 400;
 		text-transform: uppercase;
+		text-decoration: none;
+		cursor: pointer;
 		box-shadow: none;
 
 		transition:
@@ -147,15 +180,18 @@
 			border-color 0.2s;
 	}
 
+	.account-action:hover {
+		background-color: var(--accent-strong);
+		border-color: var(--accent-strong);
+	}
+
 	.nav-container,
 	nav,
-	.brand,
-	.party-status {
+	.brand {
 		position: relative;
 	}
 
-	nav::before,
-	.party-status::before {
+	nav::before {
 		content: none;
 		position: absolute;
 		inset: 0.45rem;
@@ -192,7 +228,7 @@
 			padding: 0.45em 0.6em;
 		}
 
-		.party-status {
+		.account-username {
 			display: none;
 		}
 	}

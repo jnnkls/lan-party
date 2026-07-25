@@ -2,7 +2,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import { eq } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
+import { encodeBase32LowerCase, encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 
@@ -14,6 +14,12 @@ export function generateSessionToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(18));
 	const token = encodeBase64url(bytes);
 	return token;
+}
+
+/** ~120 bits of entropy, about the same as UUID v4. */
+export function generateUserId() {
+	const bytes = crypto.getRandomValues(new Uint8Array(15));
+	return encodeBase32LowerCase(bytes);
 }
 
 export async function createSession(token: string, userId: string) {

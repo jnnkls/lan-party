@@ -101,6 +101,8 @@ verification:
     - /lans
     - /players
     - /wheel
+    - /login
+    - /register
 
 notes_for_agents:
   - The working tree may contain user changes; do not revert unrelated edits.
