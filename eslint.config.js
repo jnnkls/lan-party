@@ -20,7 +20,14 @@ export default ts.config(
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node }
 		},
-		rules: { 'no-undef': 'off' }
+		rules: {
+			'no-undef': 'off',
+			// New in eslint-plugin-svelte 3.9+ (picked up incidentally while bumping
+			// deps for security fixes). Adopting SvelteKit's resolve() helper across
+			// every href in the app is a separate routing-DX change, not something
+			// to fold into a dependency/security bump.
+			'svelte/no-navigation-without-resolve': 'off'
+		}
 	},
 	{
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
