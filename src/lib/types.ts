@@ -38,17 +38,28 @@ export type TournamentOverview = {
 	matches?: TournamentMatch[];
 };
 
+export type GameCoverage = {
+	name: string;
+	ownedBy: string[];
+};
+
 export type LanDetail = LanOverview & {
 	attendees: number;
 	attendeeNames: string[];
 	games: string[];
 	tournaments: TournamentOverview[];
 	consoles: { name: string; count: number }[];
+	gameCoverage: GameCoverage[];
 };
 
 export type GearItem = {
 	name: string;
 	count: number;
+};
+
+export type OwnedGame = {
+	name: string;
+	platform?: string;
 };
 
 export type Achievement = {
@@ -75,6 +86,7 @@ export type PlayerDetail = {
 	consoleCount?: number;
 	rank?: number;
 	consoles?: GearItem[];
+	games?: OwnedGame[];
 	attendedLANs?: LanOverview[];
 	tournaments?: TournamentOverview[];
 };

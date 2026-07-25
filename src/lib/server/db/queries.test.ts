@@ -38,6 +38,12 @@ beforeAll(async () => {
 
 	await db.insert(table.game).values([
 		{ id: 'test-game-cs2', tenantId: DEFAULT_TENANT_ID, name: 'Counter-Strike 2', platform: 'PC' },
+		{
+			id: 'test-game-trackmania',
+			tenantId: DEFAULT_TENANT_ID,
+			name: 'Trackmania',
+			platform: 'PC'
+		},
 		{ id: 'test-game-other', tenantId: OTHER_TENANT_ID, name: 'Other Tenant Game', platform: 'PC' }
 	]);
 
@@ -113,7 +119,32 @@ beforeAll(async () => {
 		}
 	]);
 
-	await db.insert(table.lanGame).values([{ lanId: 'test-lan-1', gameId: 'test-game-cs2' }]);
+	await db.insert(table.lanGame).values([
+		{ lanId: 'test-lan-1', gameId: 'test-game-cs2' },
+		{ lanId: 'test-lan-1', gameId: 'test-game-trackmania' }
+	]);
+
+	await db
+		.insert(table.playerGame)
+		.values([{ playerId: 'test-p1', gameId: 'test-game-cs2', platform: null, notes: null }]);
+
+	await db.insert(table.achievement).values([
+		{
+			id: 'test-ach-1',
+			tenantId: DEFAULT_TENANT_ID,
+			name: 'Test Achievement',
+			description: 'Earned in a test',
+			xp: 25,
+			titleRewardId: null
+		}
+	]);
+	await db.insert(table.playerAchievement).values([
+		{
+			playerId: 'test-p1',
+			achievementId: 'test-ach-1',
+			earnedAt: new Date('2026-01-01T00:00:00Z')
+		}
+	]);
 
 	await db.insert(table.tournament).values([
 		{
@@ -143,6 +174,9 @@ beforeAll(async () => {
 afterAll(async () => {
 	await db.delete(table.tournamentMatch);
 	await db.delete(table.tournament);
+	await db.delete(table.playerAchievement);
+	await db.delete(table.achievement);
+	await db.delete(table.playerGame);
 	await db.delete(table.lanGame);
 	await db.delete(table.lanAttendance);
 	await db.delete(table.lanParty);
@@ -165,7 +199,7 @@ describe('getLanOverviews', () => {
 		const lans = await getLanOverviews();
 		const lan = lans.find((l) => l.id === 'test-lan-1')!;
 		expect(lan.attendees).toBe(2);
-		expect(lan.games).toContain('Counter-Strike 2');
+		expect(lan.games).toEqual(expect.arrayContaining(['Counter-Strike 2', 'Trackmania']));
 	});
 });
 
@@ -191,6 +225,15 @@ describe('getLanDetail', () => {
 	it('returns null for an unknown id', async () => {
 		expect(await getLanDetail('does-not-exist')).toBeNull();
 	});
+
+	it('reports game coverage: owned games list their owners, unowned games are empty', async () => {
+		const lan = await getLanDetail('test-lan-1');
+		const cs2 = lan!.gameCoverage.find((g) => g.name === 'Counter-Strike 2')!;
+		const trackmania = lan!.gameCoverage.find((g) => g.name === 'Trackmania')!;
+
+		expect(cs2.ownedBy).toEqual(['TestFragMaster']);
+		expect(trackmania.ownedBy).toEqual([]);
+	});
 });
 
 describe('getPlayers', () => {
@@ -203,6 +246,26 @@ describe('getPlayers', () => {
 		const p2 = players.find((p) => p.id === 'test-p2')!;
 		expect(p1.rank).toBeLessThan(p2.rank!);
 		expect(p1.attendanceCount).toBe(1);
+	});
+
+	it('computes xp from attendance xpAwarded plus earned achievement xp, ignoring the stored column', async () => {
+		const players = await getPlayers();
+		const p1 = players.find((p) => p.id === 'test-p1')!;
+		const p2 = players.find((p) => p.id === 'test-p2')!;
+
+		// p1: 100 (lan attendance) + 25 (test-ach-1) = 125 — not the seeded 900.
+		expect(p1.xp).toBe(125);
+		// p2: 100 (lan attendance) + 0 (no achievements) — not the seeded 300.
+		expect(p2.xp).toBe(100);
+	});
+
+	it('includes the player_game library', async () => {
+		const players = await getPlayers();
+		const p1 = players.find((p) => p.id === 'test-p1')!;
+		const p2 = players.find((p) => p.id === 'test-p2')!;
+
+		expect(p1.games).toEqual([{ name: 'Counter-Strike 2', platform: 'PC' }]);
+		expect(p2.games).toEqual([]);
 	});
 });
 
@@ -231,7 +294,7 @@ describe('getLeaderboard', () => {
 			id: 'test-p1',
 			username: 'TestFragMaster',
 			avatarUrl: undefined,
-			score: 900
+			score: 125 // computed xp (100 attendance + 25 achievement), not the seeded 900
 		});
 	});
 });

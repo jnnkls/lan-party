@@ -11,7 +11,7 @@ Every tenant-scoped table (`player_profile`, `lan_party`, `game`, `console`, `to
 - **tenant** — currently a single seeded row.
 - **user** / **session** — auth identity and session tokens (see `docs/auth.md`). `password_hash` is nullable since OIDC-only users have none.
 - **oauth_account** — links a `user` to an external OIDC/OAuth identity (`provider` + `provider_account_id`, unique together). Empty until the auth phase adds a provider.
-- **player_profile** — the public-facing player identity (username, avatar, active title, rarity, xp, longest streak). Optionally linked to a `user` via `user_id`; a player profile can exist without a login (e.g. someone tracked by the group before they register).
+- **player_profile** — the public-facing player identity (username, avatar, active title, rarity, longest streak). Optionally linked to a `user` via `user_id`; a player profile can exist without a login (e.g. someone tracked by the group before they register). It has an `xp` column, but the query layer no longer reads it — see below.
 - **lan_party** — an event: title, description, theme, location, cover image, `starts_at`/`ends_at`, `status` (`future`/`ongoing`/`expired`).
 - **lan_attendance** — join table between `lan_party` and `player_profile` (composite PK), tracking `joined_at`, `checked_in`, and `xp_awarded` for that event.
 - **game** / **console** — catalogs. `lan_game` / `lan_console` link them to a specific LAN (what's planned for that event); `player_gear` links consoles to a player's personal collection.
@@ -26,6 +26,8 @@ Every tenant-scoped table (`player_profile`, `lan_party`, `game`, `console`, `to
 - Tournament matches store player _ids_; the query layer resolves them to usernames because that's what the UI has always displayed (mirrors the original mock data's shape).
 - A player's "current" win streak isn't tracked as its own column yet — `winStreakFrom()` derives a placeholder from `longest_streak`, same heuristic the old mock data used. A real "current streak" concept is future work, not part of this phase.
 - Batch-fetch patterns: get the primary rows first, then fetch related child rows with `inArray` on the collected ids, then assemble in JS. This app's data volume (one friend group's LAN history) doesn't need heavier query optimization; prefer readability.
+- **XP is computed, not stored.** `getPlayers()` sums `lan_attendance.xp_awarded` plus earned `player_achievement` → `achievement.xp` per player at query time (`getXpForPlayers`) instead of trusting `player_profile.xp`, so it can never drift from what a player actually did. `src/lib/gamification.ts` turns that total into a level/progress-within-level via `levelForXp`/`progressForXp` — the only place that math lives; components import it rather than recomputing.
+- **Game coverage.** `getLanDetail()` cross-references a LAN's planned games (`lan_game`) against its attendees' personal libraries (`player_game`) via `getGameCoverageForAttendees()`, returning `gameCoverage: { name, ownedBy: string[] }[]` so the UI can show "covered by X" vs. "needed" per game.
 
 ## Seeding
 

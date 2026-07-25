@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Rarity } from '$lib/types';
+	import { levelForXp, progressForXp } from '$lib/gamification';
 
 	let {
 		id,
@@ -25,8 +26,8 @@
 		rank: number;
 	} = $props();
 
-	const level = () => Math.max(1, Math.floor(xp / 250) + 1);
-	const progress = () => Math.min(100, Math.round(((xp % 250) / 250) * 100));
+	const level = () => levelForXp(xp);
+	const progress = () => progressForXp(xp);
 
 	const rarityColor = (r: Rarity) => {
 		switch (r) {
