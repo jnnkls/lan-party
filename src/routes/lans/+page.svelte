@@ -1,81 +1,106 @@
 <script lang="ts">
-  import type { LanEvent } from '$lib/types';
-  import LanCard from '$lib/components/LanCard.svelte';
-  import PaginationControls from '$lib/components/PaginationControls.svelte';
+	import LanCard from '$lib/components/LanCard.svelte';
+	import PaginationControls from '$lib/components/PaginationControls.svelte';
+	import type { PageProps } from './$types';
 
-  type LanOverview = LanEvent & {
-    attendees?: number;
-  };
+	type LanStatus = 'ongoing' | 'future' | 'expired';
 
-  // TODO: Replace with real data from DB/API
-  const lans: LanOverview[] = [
-    {
-      id: 'lan-006',
-      title: 'Winter LAN Bash',
-      date: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(),
-      location: 'Makerspace',
-      description: 'A cozy winter get-together with CS2, Valorant and Jackbox in the late hours.',
-      coverImage: '/lan-cover-2.jpg',
-      attendees: 18
-    },
-    {
-      id: 'lan-005',
-      title: 'Autumn FragFest',
-      date: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString(),
-      location: 'Community Hall',
-      description: 'CS2, Valorant, Trackmania night. BYO rig and snacks.',
-      coverImage: '/lan-cover-2.jpg',
-      attendees: 24
-    },
-    {
-      id: 'lan-004',
-      title: 'Summer Night LAN',
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(),
-      location: 'Garage HQ',
-      description: 'Pizza, racing, and party games.',
-      coverImage: '/lan-cover-2.jpg',
-      attendees: 21
-    },
-    {
-      id: 'lan-003',
-      title: 'Spring Bootcamp',
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 90).toISOString(),
-      location: 'LAN Lounge',
-      description: 'Practice bracket + casual matches.',
-      coverImage: '/lan-cover-2.jpg',
-      attendees: 17
-    }
-  ];
+	let { data }: PageProps = $props();
+	const lans = data.lans;
 
-  const sorted = [...lans].sort((a, b) => +new Date(b.date) - +new Date(a.date));
+	const sorted = [...lans].sort((a, b) => +new Date(b.date) - +new Date(a.date));
+	const grouped = (status: LanStatus) => sorted.filter((lan) => lan.status === status);
 
-  let page = 1;
-  const pageSize = 6;
-  const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
-  $effect(() => {
-    if (page > pageCount) page = pageCount;
-    if (page < 1) page = 1;
-  });
-  const pageItems = () => sorted.slice((page - 1) * pageSize, page * pageSize);
+	let page = $state(1);
+	const pageSize = 6;
+	const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
+	$effect(() => {
+		if (page > pageCount) page = pageCount;
+		if (page < 1) page = 1;
+	});
+	const visibleIds = () =>
+		new Set(sorted.slice((page - 1) * pageSize, page * pageSize).map((lan) => lan.id));
+
+	const sections: { status: LanStatus; label: string; icon: string; hint: string }[] = [
+		{
+			status: 'ongoing',
+			label: 'Live LANs',
+			icon: 'fa-tower-broadcast',
+			hint: 'Join now, sync up, and see who is already there.'
+		},
+		{
+			status: 'future',
+			label: 'Upcoming Quests',
+			icon: 'fa-calendar-plus',
+			hint: 'Ready up for future parties and tournament plans.'
+		},
+		{
+			status: 'expired',
+			label: 'Cleared Runs',
+			icon: 'fa-flag-checkered',
+			hint: 'Browse history, winners, attendance and recaps.'
+		}
+	];
 </script>
 
-<section class="mt-4">
-  <h1 class="mb-4 text-3xl font-extrabold text-slate-800 dark:text-slate-100">LANs</h1>
-
-  {#if sorted.length > 0}
-    <ul class="grid gap-4">
-      {#each pageItems() as lan (lan.id)}
-        <LanCard {lan} />
-      {/each}
-    </ul>
-
-    <PaginationControls
-      {page}
-      {pageCount}
-      onPrev={() => (page = Math.max(1, page - 1))}
-      onNext={() => (page = Math.min(pageCount, page + 1))}
-    />
-  {:else}
-    <div class="rounded-xl border border-dashed p-6 text-slate-600">No LANs found.</div>
-  {/if}
+<section class="screen-header">
+	<div class="flex flex-wrap items-center justify-between gap-4 pb-3">
+		<div>
+			<div class="quest-tag mb-3">
+				<i class="fa-solid fa-ethernet"></i>
+				<span>Party Board</span>
+			</div>
+			<h1>LANs</h1>
+		</div>
+		<div class="flex flex-wrap gap-2">
+			<span class="stat-chip"
+				><i class="fa-solid fa-tower-broadcast"></i>{grouped('ongoing').length} live</span
+			>
+			<span class="stat-chip"
+				><i class="fa-solid fa-calendar"></i>{grouped('future').length} upcoming</span
+			>
+			<span class="stat-chip"
+				><i class="fa-solid fa-scroll"></i>{grouped('expired').length} archived</span
+			>
+		</div>
+	</div>
 </section>
+
+{#if sorted.length > 0}
+	{#each sections as section (section.status)}
+		{@const items = grouped(section.status).filter((lan) => visibleIds().has(lan.id))}
+		<section class="arcade-section">
+			<div class="arcade-section-title">
+				<div>
+					<div class="quest-tag mb-2">
+						<i class={`fa-solid ${section.icon}`}></i>
+						<span>{section.label}</span>
+					</div>
+					<p class="text-[var(--text-muted)]">{section.hint}</p>
+				</div>
+				<span class="stat-chip">{grouped(section.status).length} parties</span>
+			</div>
+
+			{#if items.length > 0}
+				<ul class="grid gap-4">
+					{#each items as lan (lan.id)}
+						<LanCard {lan} />
+					{/each}
+				</ul>
+			{:else}
+				<div class="game-panel p-5 text-[var(--text-muted)]">
+					No {section.label.toLowerCase()} on this page.
+				</div>
+			{/if}
+		</section>
+	{/each}
+
+	<PaginationControls
+		{page}
+		{pageCount}
+		onPrev={() => (page = Math.max(1, page - 1))}
+		onNext={() => (page = Math.min(pageCount, page + 1))}
+	/>
+{:else}
+	<div class="game-panel p-6 text-[var(--text-muted)]">No LANs found.</div>
+{/if}

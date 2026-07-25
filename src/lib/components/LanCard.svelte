@@ -1,53 +1,105 @@
 <script lang="ts">
-  import DateBadge from './DateBadge.svelte';
-  import ImageFill from './ImageFill.svelte';
-  import type { LanEvent } from '$lib/types';
+	import DateBadge from './DateBadge.svelte';
+	import ImageFill from './ImageFill.svelte';
+	import type { LanOverview } from '$lib/types';
 
-  export type LanOverview = LanEvent & { attendees?: number };
+	export let lan: LanOverview;
+	export let clickable: boolean = true;
+	export let showStats: boolean = true;
 
-  export let lan: LanOverview;
-  export let clickable: boolean = true;
-  export let showStats: boolean = true;
+	const isJoinable =
+		lan.status === 'ongoing' || lan.status === 'future' || new Date(lan.date) >= new Date();
+	const actionLabel =
+		lan.status === 'expired' ? 'View Recap' : lan.status === 'ongoing' ? 'Join Live' : 'Ready Up';
+	const statusLabel =
+		lan.status === 'expired' ? 'Archived' : lan.status === 'ongoing' ? 'Live now' : 'Upcoming';
+	const statusClass =
+		lan.status === 'expired' ? 'expired' : lan.status === 'ongoing' ? '' : 'future';
 </script>
 
-<li class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow dark:bg-slate-800 dark:border-slate-700">
-  {#if clickable}
-    <a href={`/lans/${lan.id}`} aria-label={`Open ${lan.title}`} class="absolute inset-0 z-10 block focus:outline focus:outline-2 focus:outline-amber-500" style="outline-offset: -4px;"></a>
-  {/if}
+<li class="quest-card lan-card">
+	{#if clickable}
+		<a
+			href={`/lans/${lan.id}`}
+			aria-label={`Open ${lan.title}`}
+			class="absolute inset-0 z-10 block focus:outline focus:outline-2 focus:outline-[var(--accent)]"
+			style="outline-offset: -4px;"
+		></a>
+	{/if}
 
-  <!-- Badge -->
-  <div class="pointer-events-none absolute right-3 top-3">
-    <DateBadge dateIso={lan.date} />
-  </div>
+	<div class="pointer-events-none absolute top-3 right-3 z-10">
+		<DateBadge dateIso={lan.date} endedLabel="Cleared" />
+	</div>
 
-  <div class="flex flex-col sm:grid sm:grid-cols-3">
-    <!-- Left: Image (1/3) -->
-    <div class="sm:col-span-1 h-40 sm:h-40">
-      <ImageFill src={lan.coverImage} alt={lan.title} />
-    </div>
+	<div class="relative flex flex-col sm:grid sm:grid-cols-3">
+		<div class="relative h-44 bg-[var(--surface-muted)] sm:col-span-1 sm:h-full">
+			<ImageFill src={lan.coverImage} alt={lan.title} />
+			<div class="absolute bottom-3 left-3">
+				<span class="quest-tag">{actionLabel}</span>
+			</div>
+		</div>
 
-    <!-- Right: Content (2/3) -->
-    <div class="sm:col-span-2 flex flex-col gap-2 p-4 text-slate-700 dark:text-slate-200">
-      <div class="flex flex-wrap items-baseline gap-2">
-        <span class="text-lg font-semibold">{lan.title}</span>
-        {#if lan.location}
-          <span class="text-xs text-slate-500">· {lan.location}</span>
-        {/if}
-      </div>
+		<div class="relative flex flex-col gap-3 p-5 pl-6 text-[var(--text)] sm:col-span-2">
+			<div class="party-divider"></div>
 
-      {#if lan.description}
-        <p class="text-slate-600 line-clamp-2">{lan.description}</p>
-      {/if}
+			<div class="flex flex-wrap items-baseline gap-2">
+				<span class="font-display text-sm">{lan.title}</span>
+				{#if lan.location}
+					<span class="text-xs text-[var(--text-muted)]">at {lan.location}</span>
+				{/if}
+			</div>
 
-      <!-- Stats -->
-      {#if showStats}
-      <div class="mt-auto flex items-center gap-4 text-xs text-slate-600">
-        <div class="flex items-center gap-1">
-          <i class="fa-solid fa-user-group text-slate-400"></i>
-          <span>{lan.attendees ?? 0} attending</span>
-        </div>
-      </div>
-      {/if}
-    </div>
-  </div>
+			{#if lan.theme}
+				<span class="stat-chip">
+					<i class="fa-solid fa-star text-[var(--party-yellow)]"></i>
+					{lan.theme}
+				</span>
+			{/if}
+
+			{#if lan.description}
+				<p class="line-clamp-2 text-[var(--text-muted)]">{lan.description}</p>
+			{/if}
+
+			<div class="flex flex-wrap gap-2">
+				<span class="stat-chip">
+					<span class={`status-dot ${statusClass}`}></span>
+					{statusLabel}
+				</span>
+				{#if showStats}
+					<span class="stat-chip">
+						<i class="fa-solid fa-user-group text-[var(--accent)]"></i>
+						{lan.attendees ?? 0} players
+					</span>
+				{/if}
+			</div>
+
+			<div class="flex flex-wrap gap-2">
+				{#each (lan.games ?? []).slice(0, 3) as game (game)}
+					<span class="stat-chip"><i class="fa-solid fa-gamepad"></i>{game}</span>
+				{/each}
+				{#if lan.consoleNames?.length}
+					<span class="stat-chip"
+						><i class="fa-solid fa-plug"></i>{lan.consoleNames.join(' + ')}</span
+					>
+				{/if}
+			</div>
+
+			<div class="mt-auto flex flex-wrap items-center gap-2">
+				<span class="stat-chip">
+					<i class="fa-solid fa-trophy text-[var(--party-yellow)]"></i>
+					Party XP
+				</span>
+				<span class="stat-chip">
+					<i class={`fa-solid ${isJoinable ? 'fa-door-open' : 'fa-film'}`}></i>
+					{actionLabel}
+				</span>
+			</div>
+		</div>
+	</div>
 </li>
+
+<style>
+	.lan-card :global(.party-divider) {
+		height: 0.3rem;
+	}
+</style>

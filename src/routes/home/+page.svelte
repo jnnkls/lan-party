@@ -1,58 +1,84 @@
 <script lang="ts">
-  import type { LanEvent } from '$lib/types';
-  import HomeHero from '$lib/components/HomeHero.svelte';
-  import LanCard from '$lib/components/LanCard.svelte';
+	import HomeHero from '$lib/components/HomeHero.svelte';
+	import LanCard from '$lib/components/LanCard.svelte';
+	import type { PageProps } from './$types';
 
-  // TODO: Replace with real data from your DB/API
-  const events: LanEvent[] = [
-    {
-      id: 'lan-005',
-      title: 'Autumn FragFest',
-      date: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString(),
-      location: 'Community Hall',
-      description: 'CS2, Valorant, Trackmania night. BYO rig and snacks.',
-      coverImage: '/lan-cover-2.jpg'
-    },
-    {
-      id: 'lan-004',
-      title: 'Summer Night LAN',
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(),
-      location: 'Garage HQ',
-      description: 'Pizza, racing, and party games.',
-      coverImage: '/lan-cover-2.jpg'
-    },
-    {
-      id: 'lan-003',
-      title: 'Spring Bootcamp',
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 90).toISOString(),
-      location: 'LAN Lounge',
-      description: 'Practice bracket + casual matches.',
-      coverImage: '/lan-cover-2.jpg'
-    }
-  ];
+	let { data }: PageProps = $props();
+	const events = data.events;
 
-  const now = new Date();
-  const upcoming = events
-    .filter((e) => new Date(e.date) >= now)
-    .sort((a, b) => +new Date(a.date) - +new Date(b.date));
+	const now = new Date();
+	const upcoming = events
+		.filter((e) => new Date(e.date) >= now)
+		.sort((a, b) => +new Date(a.date) - +new Date(b.date));
 
-  const past = events
-    .filter((e) => new Date(e.date) < now)
-    .sort((a, b) => +new Date(b.date) - +new Date(a.date));
+	const past = events
+		.filter((e) => new Date(e.date) < now)
+		.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+
+	const live = events.filter((e) => e.status === 'ongoing');
+	const archived = events.filter((e) => e.status === 'expired' || new Date(e.date) < now);
 </script>
 
-<HomeHero next={upcoming.length > 0 ? upcoming[0] : null} />
+<HomeHero
+	next={upcoming.length > 0 ? upcoming[0] : null}
+	liveCount={live.length}
+	upcomingCount={upcoming.length}
+	archiveCount={archived.length}
+/>
+
+<section class="mt-6 grid gap-4 lg:grid-cols-3">
+	<a href="/lans" class="command-card text-inherit no-underline">
+		<div class="section-kicker">
+			<i class="fa-solid fa-ethernet"></i>
+			<span>Party Board</span>
+		</div>
+		<h3 class="mt-2">Join or plan a LAN</h3>
+		<p class="mt-2 text-[var(--text-muted)]">
+			Live, upcoming, and archived events with games and gear.
+		</p>
+	</a>
+	<a href="/players" class="command-card text-inherit no-underline">
+		<div class="section-kicker">
+			<i class="fa-solid fa-id-card-clip"></i>
+			<span>Roster</span>
+		</div>
+		<h3 class="mt-2">Browse player cards</h3>
+		<p class="mt-2 text-[var(--text-muted)]">Titles, streaks, XP, attendance, and loadouts.</p>
+	</a>
+	<a href="/leaderboard" class="command-card text-inherit no-underline">
+		<div class="section-kicker">
+			<i class="fa-solid fa-ranking-star"></i>
+			<span>High Scores</span>
+		</div>
+		<h3 class="mt-2">Check the leaderboard</h3>
+		<p class="mt-2 text-[var(--text-muted)]">Podiums and ranked XP for the whole party crew.</p>
+	</a>
+</section>
 
 <section class="mt-8">
-  <h3 class="mb-3 text-lg font-semibold text-slate-800 dark:text-slate-100">Recent events and happenings</h3>
+	<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+		<div>
+			<div class="quest-tag mb-2">
+				<i class="fa-solid fa-scroll"></i>
+				<span>Quest Log</span>
+			</div>
+			<h3>Recent events and happenings</h3>
+		</div>
+		<div class="stat-chip">
+			<i class="fa-solid fa-heart"></i>
+			<span>Happy LAN memories</span>
+		</div>
+	</div>
 
-  {#if past.length > 0}
-    <ul class="grid gap-4">
-      {#each past as e (e.id)}
-        <LanCard lan={e} clickable={true} showStats={false} />
-      {/each}
-    </ul>
-  {:else}
-    <div class="rounded-xl border border-dashed p-6 text-slate-600">No past events yet. After your first LAN, highlights will appear here.</div>
-  {/if}
+	{#if past.length > 0}
+		<ul class="grid gap-4">
+			{#each past as e (e.id)}
+				<LanCard lan={e} clickable={true} showStats={false} />
+			{/each}
+		</ul>
+	{:else}
+		<div class="game-panel p-6 text-[var(--text-muted)]">
+			No past events yet. After your first LAN, highlights will appear here.
+		</div>
+	{/if}
 </section>

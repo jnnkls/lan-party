@@ -280,3 +280,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Local machine-specific MCP config (e.g. WebStorm's local MCP bridge)
+.mcp.json

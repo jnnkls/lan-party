@@ -1,52 +1,157 @@
 <script lang="ts">
-  import ImageFill from './ImageFill.svelte';
-  import type { LanEvent } from '$lib/types';
+	import ImageFill from './ImageFill.svelte';
+	import type { LanEvent } from '$lib/types';
 
-  export let next: LanEvent | null = null;
+	export let next: LanEvent | null = null;
+	export let liveCount: number = 0;
+	export let upcomingCount: number = 0;
+	export let archiveCount: number = 0;
+
+	const formatDate = (date: string) =>
+		new Date(date).toLocaleString(undefined, {
+			weekday: 'short',
+			month: 'short',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
 </script>
 
-<section class="relative mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow dark:bg-slate-800 dark:border-slate-700">
-  <div class="absolute inset-0 -z-10 bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900"></div>
+<section class="game-panel hero-panel mt-4">
+	{#if next}
+		<div class="relative z-10 grid gap-6 p-5 lg:grid-cols-[1.15fr_0.85fr] lg:p-7">
+			<div class="flex flex-col gap-5">
+				<div class="flex flex-wrap items-center justify-between gap-3">
+					<div class="quest-tag">
+						<i class="fa-solid fa-satellite-dish"></i>
+						<span>LAN Party Campaign</span>
+					</div>
+					<div class="stat-chip">
+						<span class="status-dot future"></span>
+						<span>Next event locked</span>
+					</div>
+				</div>
 
-  {#if next}
-    <div class="grid gap-6 sm:grid-cols-3 sm:min-h-56">
-      <div class="sm:col-span-2 m-8 flex flex-col gap-3">
-        <h1 class="text-3xl font-extrabold sm:text-4xl">LAN Party Hub</h1>
-        <div class="flex items-baseline gap-2 text-slate-600">
-          <span class="text-sm">Next up:</span>
-          <span class="text-lg font-semibold text-slate-900">{next.title}</span>
-          {#if next.location}
-            <span class="text-xs text-slate-500">· {next.location}</span>
-          {/if}
-        </div>
+				<div class="space-y-3">
+					<h1 class="font-display">Keep LAN nights alive</h1>
+					<p class="max-w-2xl text-lg leading-8 text-[var(--text-muted)]">
+						A shared hub for the next session, the people who show up, the score history, and
+						the archive of every night worth remembering.
+					</p>
+				</div>
 
-        <div class="flex flex-wrap items-center gap-3 text-slate-700">
-          <div class="flex items-center gap-2">
-            <i class="fa-regular fa-calendar"></i>
-            <span>{new Date(next.date).toLocaleString(undefined, { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
-          </div>
-          <div class="hidden sm:block h-4 w-px bg-slate-300/70"></div>
-          <div class="text-xs text-slate-500">Plan, organize, and relive your LAN parties.</div>
-        </div>
+				<div class="grid gap-3 sm:grid-cols-3">
+					<div class="metric-card">
+						<span>Live</span>
+						<strong>{liveCount}</strong>
+					</div>
+					<div class="metric-card">
+						<span>Upcoming</span>
+						<strong>{upcomingCount}</strong>
+					</div>
+					<div class="metric-card">
+						<span>Archive</span>
+						<strong>{archiveCount}</strong>
+					</div>
+				</div>
 
-        {#if next.description}
-          <p class="text-slate-700">{next.description}</p>
-        {/if}
+				<div class="command-card">
+					<div class="party-divider mb-4"></div>
+					<div class="flex flex-wrap items-start justify-between gap-3">
+						<div>
+							<div class="section-kicker">
+								<i class="fa-solid fa-bolt"></i>
+								<span>Next LAN</span>
+							</div>
+							<h2 class="mt-2">{next.title}</h2>
+							{#if next.description}
+								<p class="mt-2 text-[var(--text-muted)]">{next.description}</p>
+							{/if}
+						</div>
+						<div class="flex flex-wrap gap-2">
+							<span class="stat-chip"
+								><i class="fa-regular fa-calendar"></i>{formatDate(next.date)}</span
+							>
+							{#if next.location}
+								<span class="stat-chip"
+									><i class="fa-solid fa-location-dot"></i>{next.location}</span
+								>
+							{/if}
+						</div>
+					</div>
+				</div>
 
-        <div class="mt-2 flex gap-3">
-          <a href="/lans" class="button border-slate-300 hover:border-amber-400">View all LANs</a>
-          <a href={`/lans/${next.id}`} class="button bg-amber-500 text-white hover:border-amber-600">Join / Details</a>
-        </div>
-      </div>
+				<div class="flex flex-wrap gap-3">
+					<a href={`/lans/${next.id}`} class="button !bg-[var(--accent)] !text-white">
+						<i class="fa-solid fa-door-open mr-2"></i>Join event
+					</a>
+					<a href="/lans" class="button">
+						<i class="fa-solid fa-map mr-2"></i>View all LANs
+					</a>
+				</div>
+			</div>
 
-      <div class="relative overflow-hidden bg-slate-200 sm:self-stretch">
-        <ImageFill src={next.coverImage} alt={next.title} />
-      </div>
-    </div>
-  {:else}
-    <div class="p-6 sm:p-10">
-      <h1 class="text-2xl font-extrabold sm:text-4xl">LAN Party Hub</h1>
-      <div class="mt-3 rounded-xl border border-dashed p-6 text-slate-600">No upcoming events yet. Create one on the LANs page.</div>
-    </div>
-  {/if}
+			<div class="hero-console">
+				<div class="party-divider"></div>
+				<div class="relative flex-1">
+					<ImageFill src={next.coverImage} alt={next.title} />
+				</div>
+				<div
+					class="grid grid-cols-3 gap-2 border-t border-[var(--border)] bg-[var(--surface)] p-3 text-center"
+				>
+					<div>
+						<div class="font-display text-[0.65rem] text-[var(--accent)]">XP</div>
+						<div class="text-sm font-bold">+250</div>
+					</div>
+					<div>
+						<div class="font-display text-[0.65rem] text-[var(--party-blue)]">CO-OP</div>
+						<div class="text-sm font-bold">ON</div>
+					</div>
+					<div>
+						<div class="font-display text-[0.65rem] text-[var(--party-green)]">READY</div>
+						<div class="text-sm font-bold">YES</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{:else}
+		<div class="relative z-10 p-6 sm:p-10">
+			<div class="quest-tag mb-4">
+				<i class="fa-solid fa-plus"></i>
+				<span>New Quest Needed</span>
+			</div>
+			<h1 class="font-display">LAN Party Hub</h1>
+			<div
+				class="mt-4 rounded-xl border border-dashed border-[var(--border)] p-6 text-[var(--text-muted)]"
+			>
+				No upcoming events yet. Create one on the LANs page.
+			</div>
+		</div>
+	{/if}
 </section>
+
+<style>
+	.hero-panel {
+		background:
+			linear-gradient(105deg, color-mix(in srgb, var(--accent) 26%, transparent), transparent 44%),
+			linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 26rem),
+			var(--surface);
+	}
+
+	.hero-panel :global(.font-display) {
+		text-wrap: balance;
+	}
+
+	.hero-console {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		min-height: 24rem;
+		flex-direction: column;
+		overflow: hidden;
+		border: 1px solid var(--border-strong);
+		border-radius: 4px;
+		background: var(--surface-muted);
+		box-shadow: var(--shadow);
+	}
+</style>

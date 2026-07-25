@@ -1,0 +1,107 @@
+project:
+  name: lan-party.app
+  type: SvelteKit web application
+  package_manager: pnpm
+  node_runtime: Node.js
+  description: >
+    LAN party management app for events, players, leaderboards, LAN detail pages,
+    and a random wheel utility. The current UI is a SvelteKit/Tailwind app with
+    mock data in several routes while database-backed features are still evolving.
+
+stack:
+  framework: SvelteKit
+  language: TypeScript
+  ui:
+    - Svelte 5
+    - Tailwind CSS 4
+    - Font Awesome icons
+    - Google Fonts: Open Sans and Press Start 2P
+  backend:
+    - SvelteKit server routes
+    - Drizzle ORM
+    - MySQL
+    - Lucia-style demo auth flow
+
+commands:
+  install: pnpm install
+  dev: pnpm dev
+  check: pnpm check
+  lint: pnpm lint
+  format: pnpm format
+  build: pnpm build
+  preview: pnpm preview
+  database:
+    start: pnpm db:start
+    generate_migration: pnpm db:generate
+    push_schema: pnpm db:push
+    migrate: pnpm db:migrate
+    studio: pnpm db:studio
+
+structure:
+  src/app.html: App shell, global font links, theme bootstrap script, SvelteKit head/body.
+  src/app.css: Global Tailwind import, theme tokens, shared typography, buttons, inputs, and compatibility styles.
+  src/routes: SvelteKit pages and route load functions.
+  src/routes/home: Home page with upcoming and past LAN events.
+  src/routes/lans: LAN list and LAN detail pages.
+  src/routes/leaderboard: Leaderboard UI with mock ranked players.
+  src/routes/players: Player list and player detail pages.
+  src/routes/wheel: Random wheel utility.
+  src/lib/components: Reusable UI components such as Navbar, ThemeToggle, cards, pagination, and badges.
+  src/lib/server: Server-side auth and database modules.
+  src/lib/server/db/schema.ts: Drizzle table definitions.
+  src/lib/server/db/index.ts: MySQL connection pool and Drizzle client using DATABASE_URL.
+  src/lib/server/mock-data.ts: Server-side mock repository that mirrors the intended database-backed product model.
+  drizzle: Drizzle migration SQL and metadata generated from src/lib/server/db/schema.ts.
+  static: Static assets such as logos and LAN cover images.
+
+conventions:
+  svelte:
+    - Use Svelte 5 syntax and runes for mutable component state.
+    - Prefer onclick/onkeydown event attributes over deprecated on:click style.
+    - Keep shared TypeScript types in src/lib/types.ts instead of exporting types from component instance scripts.
+  styling:
+    - Primary accent color is "#FF7F50".
+    - Dark theme base color is "#35393C".
+    - Theme colors should use CSS variables from src/app.css when practical.
+    - Frontend direction is a happy, inviting LAN-party manager with a strong arcade-cabinet / party-control-room feel.
+    - Reuse the game UI primitives in src/app.css: game-panel, quest-card, quest-tag, stat-chip, and party-divider.
+    - Supported secondary party colors are var(--party-blue), var(--party-green), var(--party-yellow), var(--party-pink), and var(--party-purple).
+    - Prefer quest-board language, playful progress/status chips, pixel-like panel shadows, cabinet-style borders, and icon-driven controls for new dashboard UI.
+    - Keep route pages cohesive by composing screen-header, game-panel, quest-card, segmented-control, stat-chip, quest-tag, and party-divider instead of one-off Tailwind card palettes.
+    - Current product direction is a playful operations dashboard: friendly LAN command center, collectible player cards, XP bars, high-score podiums, status dots, and structured event/detail surfaces.
+    - The logo should stay prominent in the nav; do not shrink it back to a tiny icon.
+    - Use only the fixed .grid-bg overlay grid for the page background; do not add a second grid in body backgrounds.
+    - Use Press Start 2P for headings, nav, buttons, badges, and compact display text.
+    - Keep body copy and dense content readable with Open Sans.
+    - Avoid hardcoding slate/amber theme colors in new UI; use var(--text), var(--text-muted), var(--surface), var(--surface-muted), var(--surface-sunken), var(--border), and var(--accent).
+  data:
+    - Page data should be loaded through SvelteKit server load functions, not inline client-side arrays.
+    - Current mock data lives in src/lib/server/mock-data.ts and should mirror the real database shape.
+    - Replace mock repository functions with typed Drizzle/MySQL queries incrementally.
+    - Product model includes tenants, LAN parties, attendance, games, consoles/gear, tournaments, tournament matches, XP, achievements, and titles.
+  database:
+    - MySQL is configured through DATABASE_URL and docker-compose.yml exposes a local mysql database on port 3306.
+    - Drizzle schema is in src/lib/server/db/schema.ts.
+    - Use pnpm db:generate after schema changes, pnpm db:migrate to apply generated migrations, and pnpm db:push only for local schema prototyping.
+    - Keep multi-tenant fields on new persisted models unless a table is strictly global.
+  accessibility:
+    - Keep interactive controls as semantic buttons or links.
+    - Preserve aria-labels on card overlay links and icon-only controls.
+
+verification:
+  required_before_finishing:
+    - pnpm check
+    - pnpm lint
+    - pnpm build
+  optional_smoke_routes:
+    - /home
+    - /leaderboard
+    - /lans
+    - /players
+    - /wheel
+
+notes_for_agents:
+  - The working tree may contain user changes; do not revert unrelated edits.
+  - The root route redirects to /home via src/routes/+page.ts.
+  - Theme initialization is intentionally handled early in src/app.html to avoid a flash of the wrong theme.
+  - If the theme toggle is changed, verify it updates html.dark, html[data-theme], color-scheme, and localStorage.theme.

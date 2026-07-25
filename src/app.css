@@ -2,12 +2,65 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
+/* Tailwind v4 defaults `dark:` to prefers-color-scheme.
+   We use a class on <html> instead, so we need to redefine the variant. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 html {
 	scroll-behavior: smooth;
+	color-scheme: dark;
+	--accent: #e53935;
+	--accent-strong: #ff4a45;
+	--accent-soft: rgba(229, 57, 53, 0.16);
+	--party-blue: #7ea7ff;
+	--party-green: #58d68d;
+	--party-yellow: #f6c85f;
+	--party-pink: #f05b78;
+	--party-purple: #9d7cff;
+	--dark: #050505;
+	--cabinet: #111111;
+	--cabinet-deep: #050505;
+	--bg: #050505;
+	--bg-accent: #101010;
+	--surface: #111111;
+	--surface-muted: #181818;
+	--surface-raised: #202020;
+	--surface-sunken: #090909;
+	--surface-hover: #292929;
+	--border: rgba(255, 255, 255, 0.12);
+	--border-strong: rgba(255, 255, 255, 0.28);
+	--text: #f7f7f2;
+	--text-muted: #b7b7ad;
+	--grid: rgba(255, 255, 255, 0.055);
+	--shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+	--pixel-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+	--panel-gradient: linear-gradient(180deg, var(--surface-raised), var(--surface));
+	--panel-accent: linear-gradient(90deg, var(--accent), transparent);
+	--glow: 0 0 0 1px rgba(229, 57, 53, 0.36), 0 22px 60px rgba(229, 57, 53, 0.16);
+}
+
+html.dark {
+	color-scheme: dark;
+	--bg: #050505;
+	--bg-accent: #101010;
+	--surface: #111111;
+	--surface-muted: #181818;
+	--surface-raised: #202020;
+	--surface-sunken: #090909;
+	--surface-hover: #292929;
+	--border: rgba(255, 255, 255, 0.12);
+	--border-strong: rgba(255, 255, 255, 0.28);
+	--text: #f7f7f2;
+	--text-muted: #b7b7ad;
+	--grid: rgba(255, 255, 255, 0.055);
+	--shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+	--pixel-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+	--panel-gradient: linear-gradient(180deg, var(--surface-raised), var(--surface));
+	--glow: 0 0 0 1px rgba(229, 57, 53, 0.36), 0 22px 60px rgba(229, 57, 53, 0.16);
 }
 
 * {
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Open Sans', system-ui, sans-serif;
 }
 
 span {
@@ -15,22 +68,491 @@ span {
 	font-weight: inherit;
 }
 
+h1,
+h2,
+h3,
+.page-title,
+.font-display {
+	font-family: 'Open Sans', system-ui, sans-serif;
+	letter-spacing: 0;
+	line-height: 0.98;
+	font-weight: 800;
+	text-transform: uppercase;
+}
+
+h1,
+.page-title {
+	font-size: clamp(2.75rem, 8vw, 7.2rem);
+}
+
+h2 {
+	font-size: clamp(2rem, 4.5vw, 4.5rem);
+}
+
+h3 {
+	font-size: clamp(1.1rem, 2vw, 1.75rem);
+	line-height: 1.08;
+}
+
+body {
+	color: var(--text);
+	background:
+		linear-gradient(120deg, rgba(229, 57, 53, 0.18), transparent 28rem),
+		linear-gradient(180deg, #101010, var(--bg) 24rem);
+	background-attachment: fixed;
+	transition:
+		background-color 0.2s,
+		color 0.2s;
+}
+
+.dark body {
+	background:
+		linear-gradient(120deg, rgba(229, 57, 53, 0.18), transparent 28rem),
+		linear-gradient(180deg, #101010, var(--bg) 24rem);
+	background-attachment: fixed;
+}
+
+.app-shell {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	padding: 0 1rem 5rem;
+}
+
+.app-content {
+	width: min(100%, 78rem);
+}
+
+.grid-bg {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background-image:
+		linear-gradient(var(--grid) 1px, transparent 1px),
+		linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+	background-size: 40px 40px;
+	-webkit-mask-image: radial-gradient(ellipse at top, black 30%, transparent 70%);
+	mask-image: radial-gradient(ellipse at top, black 30%, transparent 70%);
+}
+
+.grid-bg::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: repeating-linear-gradient(
+		0deg,
+		transparent 0 7px,
+		color-mix(in srgb, var(--text) 4%, transparent) 7px 8px
+	);
+	opacity: 0.42;
+}
+
 .bgGrid {
 	background-size: 40px 40px;
 	background-image:
-		linear-gradient(to right, darkgray 1px, transparent 1px),
-		linear-gradient(to bottom, darkgray 1px, transparent 1px);
+		linear-gradient(to right, var(--grid) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
 }
 
 button,
 .button {
-	border-radius: 8px;
-	border: 1px solid transparent;
-	padding: 0.6em 1.2em;
-	font-size: 1em;
-	font-weight: 500;
-	font-family: inherit;
-	background-color: white;
+	border-radius: 4px;
+	border: 1px solid var(--border-strong);
+	padding: 0.85em 1.2em;
+	font-size: 0.78em;
+	font-weight: 800;
+	font-family: 'Open Sans', system-ui, sans-serif;
+	text-transform: uppercase;
+	background: var(--surface-raised);
+	color: var(--text);
 	cursor: pointer;
-	transition: border-color 0.2s;
+	transition:
+		background-color 0.15s,
+		border-color 0.15s,
+		color 0.15s,
+		transform 0.1s,
+		box-shadow 0.15s;
+	box-shadow: none;
+}
+
+nav a,
+.theme-toggle,
+.tabular-nums,
+.rounded-full,
+.text-xs.uppercase,
+.text-xs.tracking-wide {
+	font-family: 'Open Sans', system-ui, sans-serif;
+	letter-spacing: 0;
+}
+
+nav a,
+.rounded-full,
+.text-xs.uppercase,
+.text-xs.tracking-wide {
+	font-size: 0.68rem;
+	line-height: 1.5;
+	text-transform: uppercase;
+}
+
+button:hover,
+.button:hover {
+	background-color: var(--surface-hover);
+	border-color: var(--accent);
+	transform: translateY(-1px);
+	box-shadow: var(--glow);
+}
+
+button:active,
+.button:active {
+	transform: translateY(0);
+	box-shadow: none;
+}
+
+.game-panel,
+.quest-card {
+	position: relative;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background:
+		linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 34%),
+		var(--panel-gradient);
+	box-shadow: var(--pixel-shadow);
+	overflow: hidden;
+}
+
+.game-panel::before,
+.quest-card::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background:
+		linear-gradient(90deg, var(--accent) 0 0.25rem, transparent 0.25rem),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 6rem),
+		repeating-linear-gradient(
+			0deg,
+			transparent 0 12px,
+			color-mix(in srgb, var(--text) 3%, transparent) 12px 13px
+		);
+	opacity: 0.85;
+}
+
+.quest-card {
+	transition:
+		transform 0.15s,
+		box-shadow 0.15s,
+		border-color 0.15s;
+}
+
+.quest-card:hover {
+	border-color: var(--accent);
+	transform: translateY(-2px);
+	box-shadow: var(--glow);
+}
+
+.stat-chip,
+.quest-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	width: fit-content;
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	background: color-mix(in srgb, var(--surface-muted) 86%, transparent);
+	color: var(--text);
+	padding: 0.4rem 0.65rem;
+	font-size: 0.72rem;
+	font-family: 'Open Sans', system-ui, sans-serif;
+	font-weight: 800;
+	line-height: 1.5;
+	text-transform: uppercase;
+}
+
+.quest-tag {
+	border-color: color-mix(in srgb, var(--accent) 48%, var(--border));
+	background:
+		linear-gradient(90deg, color-mix(in srgb, var(--accent) 24%, transparent), transparent),
+		var(--surface-sunken);
+	color: var(--text);
+}
+
+.party-divider {
+	height: 1px;
+	border-radius: 0;
+	background: linear-gradient(90deg, var(--accent), rgba(255, 255, 255, 0.24), transparent);
+}
+
+.screen-header {
+	position: relative;
+	margin-block: 1rem;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background:
+		linear-gradient(120deg, color-mix(in srgb, var(--accent) 18%, transparent), transparent 42%),
+		var(--panel-gradient);
+	box-shadow: var(--pixel-shadow);
+	padding: clamp(1.2rem, 3vw, 2rem);
+	overflow: hidden;
+}
+
+.screen-header::after {
+	content: '';
+	position: absolute;
+	inset-inline: 0;
+	bottom: 0;
+	height: 0.25rem;
+	border-radius: 0;
+	background: var(--accent);
+}
+
+.screen-header > * {
+	position: relative;
+	z-index: 1;
+}
+
+.arcade-section {
+	display: grid;
+	gap: 1rem;
+}
+
+.arcade-section + .arcade-section {
+	margin-top: 2rem;
+}
+
+.arcade-section-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.section-kicker {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	width: fit-content;
+	color: var(--accent-strong);
+	font-family: 'Open Sans', system-ui, sans-serif;
+	font-size: 0.78rem;
+	font-weight: 800;
+	line-height: 1.5;
+	text-transform: uppercase;
+}
+
+.command-grid {
+	display: grid;
+	gap: 1rem;
+}
+
+.command-card,
+.metric-card,
+.empty-state {
+	position: relative;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background:
+		linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 42%),
+		var(--surface);
+	box-shadow: var(--shadow);
+	overflow: hidden;
+}
+
+.command-card {
+	padding: 1rem;
+}
+
+.metric-card {
+	display: grid;
+	gap: 0.4rem;
+	padding: 1rem;
+}
+
+.metric-card strong {
+	font-family: 'Open Sans', system-ui, sans-serif;
+	font-size: clamp(2rem, 4vw, 3.4rem);
+	line-height: 0.9;
+	color: var(--text);
+}
+
+.metric-card span,
+.empty-state {
+	color: var(--text-muted);
+}
+
+.empty-state {
+	padding: 1.25rem;
+}
+
+.status-dot {
+	display: inline-block;
+	width: 0.65rem;
+	height: 0.65rem;
+	border: 1px solid var(--border-strong);
+	border-radius: 999px;
+	background: var(--party-green);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--party-green) 18%, transparent);
+}
+
+.status-dot.future {
+	background: var(--party-blue);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--party-blue) 18%, transparent);
+}
+
+.status-dot.expired {
+	background: var(--text-muted);
+	box-shadow: none;
+}
+
+.xp-track {
+	position: relative;
+	height: 0.7rem;
+	border: 1px solid var(--border);
+	border-radius: 2px;
+	background: var(--surface-sunken);
+	overflow: hidden;
+}
+
+.xp-fill {
+	display: block;
+	height: 100%;
+	border-radius: inherit;
+	background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+}
+
+.segmented-control {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	width: fit-content;
+	max-width: 100%;
+	border: 1px solid var(--border-strong);
+	border-radius: 6px;
+	background: var(--surface-sunken);
+	padding: 0.35rem;
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.segmented-control button {
+	border-color: transparent;
+	background: transparent;
+	box-shadow: none;
+	font-size: 0.62rem;
+}
+
+.segmented-control button:hover,
+.segmented-control button.active {
+	background: linear-gradient(135deg, var(--accent), var(--party-pink));
+	color: white;
+	box-shadow: 3px 3px 0 color-mix(in srgb, var(--dark) 22%, transparent);
+}
+
+button:disabled,
+.button:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='search'],
+input[type='url'],
+input:not([type]),
+textarea,
+select {
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	padding: 0.55em 0.85em;
+	font-size: 0.95em;
+	background: var(--surface);
+	color: var(--text);
+	transition:
+		border-color 0.15s,
+		box-shadow 0.15s,
+		background-color 0.15s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+::selection {
+	background: var(--accent);
+	color: white;
+}
+
+/* Compatibility layer for older Tailwind classes still used in route markup. */
+.bg-white,
+.bg-white\/80,
+.dark .dark\:bg-slate-800,
+.dark .dark\:bg-slate-800\/70,
+html[data-theme='light'] .dark\:bg-slate-800,
+html[data-theme='light'] .dark\:bg-slate-800\/70 {
+	background-color: var(--surface) !important;
+}
+
+.bg-slate-50,
+.bg-slate-100,
+.bg-slate-200,
+.dark .dark\:from-slate-900,
+.dark .dark\:via-slate-900,
+.dark .dark\:to-slate-900 {
+	background-color: var(--surface-muted) !important;
+}
+
+.border-slate-200,
+.border-slate-300,
+.dark .dark\:border-slate-700,
+html[data-theme='light'] .dark\:border-slate-700 {
+	border-color: var(--border) !important;
+}
+
+.text-slate-800,
+.text-slate-900,
+.dark .dark\:text-slate-100,
+.dark .dark\:text-slate-200,
+html[data-theme='light'] .dark\:text-slate-100,
+html[data-theme='light'] .dark\:text-slate-200 {
+	color: var(--text) !important;
+}
+
+.text-slate-300,
+.text-slate-400,
+.text-slate-500,
+.text-slate-600,
+.text-slate-700,
+.dark .dark\:text-slate-300,
+html[data-theme='light'] .dark\:text-slate-300 {
+	color: var(--text-muted) !important;
+}
+
+.bg-amber-400,
+.bg-amber-400\/90,
+.bg-amber-500,
+.\!bg-amber-500 {
+	background-color: var(--accent) !important;
+}
+
+.hover\:\!bg-amber-600:hover {
+	background-color: var(--accent-strong) !important;
+}
+
+.text-amber-400,
+.text-amber-500,
+.text-indigo-500 {
+	color: var(--accent) !important;
+}
+
+.focus\:outline-amber-500:focus {
+	outline-color: var(--accent) !important;
 }

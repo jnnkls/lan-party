@@ -1,0 +1,1145 @@
+{
+	"version": "5",
+	"dialect": "mysql",
+	"id": "c1c121ea-ac7e-42b0-afb9-cfa237af9ae2",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"tables": {
+		"achievement": {
+			"name": "achievement",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(120)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"xp": {
+					"name": "xp",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": 0
+				},
+				"title_reward_id": {
+					"name": "title_reward_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"achievement_tenant_id_tenant_id_fk": {
+					"name": "achievement_tenant_id_tenant_id_fk",
+					"tableFrom": "achievement",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"achievement_title_reward_id_title_id_fk": {
+					"name": "achievement_title_reward_id_title_id_fk",
+					"tableFrom": "achievement",
+					"tableTo": "title",
+					"columnsFrom": ["title_reward_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"achievement_id": {
+					"name": "achievement_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"console": {
+			"name": "console",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(160)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"console_tenant_id_tenant_id_fk": {
+					"name": "console_tenant_id_tenant_id_fk",
+					"tableFrom": "console",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"console_id": {
+					"name": "console_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"game": {
+			"name": "game",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(160)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"platform": {
+					"name": "platform",
+					"type": "varchar(120)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"game_tenant_id_tenant_id_fk": {
+					"name": "game_tenant_id_tenant_id_fk",
+					"tableFrom": "game",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"game_id": {
+					"name": "game_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"lan_attendance": {
+			"name": "lan_attendance",
+			"columns": {
+				"lan_id": {
+					"name": "lan_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"player_id": {
+					"name": "player_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"joined_at": {
+					"name": "joined_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"checked_in": {
+					"name": "checked_in",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": false
+				},
+				"xp_awarded": {
+					"name": "xp_awarded",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": 0
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"lan_attendance_lan_id_lan_party_id_fk": {
+					"name": "lan_attendance_lan_id_lan_party_id_fk",
+					"tableFrom": "lan_attendance",
+					"tableTo": "lan_party",
+					"columnsFrom": ["lan_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"lan_attendance_player_id_player_profile_id_fk": {
+					"name": "lan_attendance_player_id_player_profile_id_fk",
+					"tableFrom": "lan_attendance",
+					"tableTo": "player_profile",
+					"columnsFrom": ["player_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"lan_attendance_lan_id_player_id_pk": {
+					"name": "lan_attendance_lan_id_player_id_pk",
+					"columns": ["lan_id", "player_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"lan_console": {
+			"name": "lan_console",
+			"columns": {
+				"lan_id": {
+					"name": "lan_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"console_id": {
+					"name": "console_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"count": {
+					"name": "count",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": 1
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"lan_console_lan_id_lan_party_id_fk": {
+					"name": "lan_console_lan_id_lan_party_id_fk",
+					"tableFrom": "lan_console",
+					"tableTo": "lan_party",
+					"columnsFrom": ["lan_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"lan_console_console_id_console_id_fk": {
+					"name": "lan_console_console_id_console_id_fk",
+					"tableFrom": "lan_console",
+					"tableTo": "console",
+					"columnsFrom": ["console_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"lan_console_lan_id_console_id_pk": {
+					"name": "lan_console_lan_id_console_id_pk",
+					"columns": ["lan_id", "console_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"lan_game": {
+			"name": "lan_game",
+			"columns": {
+				"lan_id": {
+					"name": "lan_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"game_id": {
+					"name": "game_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"lan_game_lan_id_lan_party_id_fk": {
+					"name": "lan_game_lan_id_lan_party_id_fk",
+					"tableFrom": "lan_game",
+					"tableTo": "lan_party",
+					"columnsFrom": ["lan_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"lan_game_game_id_game_id_fk": {
+					"name": "lan_game_game_id_game_id_fk",
+					"tableFrom": "lan_game",
+					"tableTo": "game",
+					"columnsFrom": ["game_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"lan_game_lan_id_game_id_pk": {
+					"name": "lan_game_lan_id_game_id_pk",
+					"columns": ["lan_id", "game_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"lan_party": {
+			"name": "lan_party",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"title": {
+					"name": "title",
+					"type": "varchar(160)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"theme": {
+					"name": "theme",
+					"type": "varchar(120)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"location": {
+					"name": "location",
+					"type": "varchar(160)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"cover_image": {
+					"name": "cover_image",
+					"type": "varchar(512)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"starts_at": {
+					"name": "starts_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"ends_at": {
+					"name": "ends_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"status": {
+					"name": "status",
+					"type": "enum('expired','ongoing','future')",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "'future'"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"lan_party_tenant_id_tenant_id_fk": {
+					"name": "lan_party_tenant_id_tenant_id_fk",
+					"tableFrom": "lan_party",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"lan_party_id": {
+					"name": "lan_party_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"player_achievement": {
+			"name": "player_achievement",
+			"columns": {
+				"player_id": {
+					"name": "player_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"achievement_id": {
+					"name": "achievement_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"earned_at": {
+					"name": "earned_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"player_achievement_player_id_player_profile_id_fk": {
+					"name": "player_achievement_player_id_player_profile_id_fk",
+					"tableFrom": "player_achievement",
+					"tableTo": "player_profile",
+					"columnsFrom": ["player_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"player_achievement_achievement_id_achievement_id_fk": {
+					"name": "player_achievement_achievement_id_achievement_id_fk",
+					"tableFrom": "player_achievement",
+					"tableTo": "achievement",
+					"columnsFrom": ["achievement_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"player_achievement_player_id_achievement_id_pk": {
+					"name": "player_achievement_player_id_achievement_id_pk",
+					"columns": ["player_id", "achievement_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"player_gear": {
+			"name": "player_gear",
+			"columns": {
+				"player_id": {
+					"name": "player_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"console_id": {
+					"name": "console_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"count": {
+					"name": "count",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": 1
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"player_gear_player_id_player_profile_id_fk": {
+					"name": "player_gear_player_id_player_profile_id_fk",
+					"tableFrom": "player_gear",
+					"tableTo": "player_profile",
+					"columnsFrom": ["player_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"player_gear_console_id_console_id_fk": {
+					"name": "player_gear_console_id_console_id_fk",
+					"tableFrom": "player_gear",
+					"tableTo": "console",
+					"columnsFrom": ["console_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"player_gear_player_id_console_id_pk": {
+					"name": "player_gear_player_id_console_id_pk",
+					"columns": ["player_id", "console_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"player_profile": {
+			"name": "player_profile",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"username": {
+					"name": "username",
+					"type": "varchar(32)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"avatar_url": {
+					"name": "avatar_url",
+					"type": "varchar(512)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"active_title": {
+					"name": "active_title",
+					"type": "varchar(120)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"rarity": {
+					"name": "rarity",
+					"type": "enum('common','rare','epic','legendary')",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": "'common'"
+				},
+				"xp": {
+					"name": "xp",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": 0
+				},
+				"longest_streak": {
+					"name": "longest_streak",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false,
+					"default": 0
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"player_profile_tenant_id_tenant_id_fk": {
+					"name": "player_profile_tenant_id_tenant_id_fk",
+					"tableFrom": "player_profile",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"player_profile_user_id_user_id_fk": {
+					"name": "player_profile_user_id_user_id_fk",
+					"tableFrom": "player_profile",
+					"tableTo": "user",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"player_profile_id": {
+					"name": "player_profile_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"player_title": {
+			"name": "player_title",
+			"columns": {
+				"player_id": {
+					"name": "player_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"title_id": {
+					"name": "title_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"earned_at": {
+					"name": "earned_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"player_title_player_id_player_profile_id_fk": {
+					"name": "player_title_player_id_player_profile_id_fk",
+					"tableFrom": "player_title",
+					"tableTo": "player_profile",
+					"columnsFrom": ["player_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"player_title_title_id_title_id_fk": {
+					"name": "player_title_title_id_title_id_fk",
+					"tableFrom": "player_title",
+					"tableTo": "title",
+					"columnsFrom": ["title_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"player_title_player_id_title_id_pk": {
+					"name": "player_title_player_id_title_id_pk",
+					"columns": ["player_id", "title_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"session": {
+			"name": "session",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"user_id": {
+					"name": "user_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"expires_at": {
+					"name": "expires_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"session_user_id_user_id_fk": {
+					"name": "session_user_id_user_id_fk",
+					"tableFrom": "session",
+					"tableTo": "user",
+					"columnsFrom": ["user_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"session_id": {
+					"name": "session_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"tenant": {
+			"name": "tenant",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(120)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"slug": {
+					"name": "slug",
+					"type": "varchar(80)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {
+				"tenant_id": {
+					"name": "tenant_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {
+				"tenant_slug_unique": {
+					"name": "tenant_slug_unique",
+					"columns": ["slug"]
+				}
+			},
+			"checkConstraint": {}
+		},
+		"title": {
+			"name": "title",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(120)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"source": {
+					"name": "source",
+					"type": "varchar(160)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"title_tenant_id_tenant_id_fk": {
+					"name": "title_tenant_id_tenant_id_fk",
+					"tableFrom": "title",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"title_id": {
+					"name": "title_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"tournament": {
+			"name": "tournament",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"lan_id": {
+					"name": "lan_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"game_id": {
+					"name": "game_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(160)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"starts_at": {
+					"name": "starts_at",
+					"type": "datetime",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"winner_player_id": {
+					"name": "winner_player_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"tournament_tenant_id_tenant_id_fk": {
+					"name": "tournament_tenant_id_tenant_id_fk",
+					"tableFrom": "tournament",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tournament_lan_id_lan_party_id_fk": {
+					"name": "tournament_lan_id_lan_party_id_fk",
+					"tableFrom": "tournament",
+					"tableTo": "lan_party",
+					"columnsFrom": ["lan_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tournament_game_id_game_id_fk": {
+					"name": "tournament_game_id_game_id_fk",
+					"tableFrom": "tournament",
+					"tableTo": "game",
+					"columnsFrom": ["game_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tournament_winner_player_id_player_profile_id_fk": {
+					"name": "tournament_winner_player_id_player_profile_id_fk",
+					"tableFrom": "tournament",
+					"tableTo": "player_profile",
+					"columnsFrom": ["winner_player_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"tournament_id": {
+					"name": "tournament_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"tournament_match": {
+			"name": "tournament_match",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tournament_id": {
+					"name": "tournament_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"round": {
+					"name": "round",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"player_a_id": {
+					"name": "player_a_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"player_b_id": {
+					"name": "player_b_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"winner_player_id": {
+					"name": "winner_player_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"score": {
+					"name": "score",
+					"type": "varchar(40)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"tournament_match_tournament_id_tournament_id_fk": {
+					"name": "tournament_match_tournament_id_tournament_id_fk",
+					"tableFrom": "tournament_match",
+					"tableTo": "tournament",
+					"columnsFrom": ["tournament_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tournament_match_player_a_id_player_profile_id_fk": {
+					"name": "tournament_match_player_a_id_player_profile_id_fk",
+					"tableFrom": "tournament_match",
+					"tableTo": "player_profile",
+					"columnsFrom": ["player_a_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tournament_match_player_b_id_player_profile_id_fk": {
+					"name": "tournament_match_player_b_id_player_profile_id_fk",
+					"tableFrom": "tournament_match",
+					"tableTo": "player_profile",
+					"columnsFrom": ["player_b_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"tournament_match_winner_player_id_player_profile_id_fk": {
+					"name": "tournament_match_winner_player_id_player_profile_id_fk",
+					"tableFrom": "tournament_match",
+					"tableTo": "player_profile",
+					"columnsFrom": ["winner_player_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"tournament_match_id": {
+					"name": "tournament_match_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"checkConstraint": {}
+		},
+		"user": {
+			"name": "user",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"tenant_id": {
+					"name": "tenant_id",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"age": {
+					"name": "age",
+					"type": "int",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"username": {
+					"name": "username",
+					"type": "varchar(32)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"password_hash": {
+					"name": "password_hash",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"user_tenant_id_tenant_id_fk": {
+					"name": "user_tenant_id_tenant_id_fk",
+					"tableFrom": "user",
+					"tableTo": "tenant",
+					"columnsFrom": ["tenant_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"user_id": {
+					"name": "user_id",
+					"columns": ["id"]
+				}
+			},
+			"uniqueConstraints": {
+				"user_username_unique": {
+					"name": "user_username_unique",
+					"columns": ["username"]
+				}
+			},
+			"checkConstraint": {}
+		}
+	},
+	"views": {},
+	"_meta": {
+		"schemas": {},
+		"tables": {},
+		"columns": {}
+	},
+	"internal": {
+		"tables": {},
+		"indexes": {}
+	}
+}

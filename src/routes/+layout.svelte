@@ -7,10 +7,9 @@
 </script>
 
 <Navbar />
-<div class="flex justify-center">
-	<div class="max-w-6xl w-full flex flex-col px-4">
+<main class="app-shell">
+	<div class="app-content">
 		{@render children()}
 	</div>
-</div>
+</main>
 <ThemeToggle />
-

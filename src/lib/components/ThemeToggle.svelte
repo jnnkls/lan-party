@@ -1,27 +1,47 @@
-<script lang="ts">
-  import { onMount } from 'svelte';
-  import { applyTheme, getInitialTheme, toggleTheme, type Theme } from '$lib/theme';
-
-  let theme: Theme = 'light';
-  onMount(() => {
-    theme = getInitialTheme();
-    applyTheme(theme);
-  });
-
-  function handleToggle() {
-    theme = toggleTheme();
-  }
-</script>
-
 <button
-  class="fixed bottom-4 right-4 z-50 rounded-full bg-white/90 p-3 shadow ring-1 ring-slate-300 backdrop-blur transition hover:bg-amber-50 dark:bg-slate-800/90 dark:text-slate-200 dark:ring-slate-600"
-  on:click={handleToggle}
-  aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-  title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+	class="theme-toggle"
+	data-theme-toggle
+	type="button"
+	aria-label="Switch theme"
+	title="Switch theme"
 >
-  {#if theme === 'dark'}
-    <i class="fa-solid fa-sun text-amber-400"></i>
-  {:else}
-    <i class="fa-solid fa-moon text-slate-700"></i>
-  {/if}
+	<i class="fa-solid fa-moon moon-icon"></i>
+	<i class="fa-solid fa-sun sun-icon"></i>
 </button>
+
+<style>
+	.theme-toggle {
+		position: fixed;
+		right: 1rem;
+		bottom: 1rem;
+		z-index: 50;
+		display: inline-flex;
+		height: 3rem;
+		width: 3rem;
+		align-items: center;
+		justify-content: center;
+		border-radius: 4px;
+		border: 1px solid var(--border-strong);
+		background: var(--surface-raised);
+		color: var(--text);
+		box-shadow: var(--shadow);
+		backdrop-filter: blur(10px);
+	}
+
+	.theme-toggle:hover {
+		border-color: var(--accent);
+		background: var(--surface-hover);
+	}
+
+	.sun-icon {
+		display: none;
+	}
+
+	:global(.dark) .moon-icon {
+		display: none;
+	}
+
+	:global(.dark) .sun-icon {
+		display: inline-block;
+	}
+</style>

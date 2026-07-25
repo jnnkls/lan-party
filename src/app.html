@@ -4,15 +4,73 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<script src="https://kit.fontawesome.com/9e348cec91.js" crossorigin="anonymous"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Press+Start+2P&display=swap"
+			rel="stylesheet"
+		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<script>(function(){try{var s=localStorage.getItem('theme');var d=s? s==='dark' : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; if(d) document.documentElement.classList.add('dark');}catch(e){}})();</script>
+		<script>
+			(function () {
+				function applyTheme(theme) {
+					var d = theme === 'dark';
+					document.documentElement.classList.toggle('dark', d);
+					document.documentElement.dataset.theme = d ? 'dark' : 'light';
+					document.documentElement.style.colorScheme = d ? 'dark' : 'light';
+					try {
+						localStorage.setItem('theme', d ? 'dark' : 'light');
+					} catch (e) {}
+					updateButtons(d ? 'dark' : 'light');
+				}
+
+				function updateButtons(theme) {
+					var buttons = document.querySelectorAll('[data-theme-toggle]');
+					for (var i = 0; i < buttons.length; i += 1) {
+						var next = theme === 'dark' ? 'light' : 'dark';
+						buttons[i].setAttribute('aria-label', 'Switch to ' + next + ' mode');
+						buttons[i].setAttribute('title', 'Switch to ' + next + ' mode');
+					}
+				}
+
+				function getInitialTheme() {
+					var s = null;
+					try {
+						s = localStorage.getItem('theme');
+					} catch (e) {}
+					if (s === 'light' || s === 'dark') return s;
+					return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light';
+				}
+
+				try {
+					applyTheme(getInitialTheme());
+				} catch (e) {
+					document.documentElement.dataset.theme = 'light';
+				}
+
+				document.addEventListener('click', function (event) {
+					var button =
+						event.target && event.target.closest && event.target.closest('[data-theme-toggle]');
+					if (!button) return;
+					event.preventDefault();
+					var current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+					applyTheme(current === 'dark' ? 'light' : 'dark');
+				});
+
+				document.addEventListener('DOMContentLoaded', function () {
+					updateButtons(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+				});
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body
 		data-sveltekit-preload-data="hover"
-		class="relative flex min-h-screen flex-col bg-white text-sm text-slate-800 dark:bg-[#0b1220] dark:text-slate-200 sm:text-base"
+		class="relative flex min-h-screen flex-col text-sm sm:text-base"
 	>
-		<div class="bgGrid absolute inset-0 z-[-1] opacity-5 dark:opacity-0"></div>
+		<div class="grid-bg"></div>
 		<div class="w-lvw">%sveltekit.body%</div>
 	</body>
 </html>
