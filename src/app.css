@@ -8,35 +8,33 @@
 
 html {
 	scroll-behavior: smooth;
-	color-scheme: dark;
+	color-scheme: light;
 	--accent: #ff7f50;
-	--accent-strong: #ff9466;
-	--accent-soft: rgba(255, 127, 80, 0.18);
+	--accent-strong: #e8632f;
+	--accent-soft: rgba(255, 127, 80, 0.14);
 	/* Text color for content placed on a solid accent/party-color background —
 	   those colors are all too bright for white text to hit WCAG AA contrast. */
 	--on-accent: #14161a;
-	--party-blue: #7ea7ff;
-	--party-green: #58d68d;
-	--party-yellow: #f6c85f;
-	--party-pink: #f05b78;
-	--party-purple: #9d7cff;
+	--party-blue: #3f6fd6;
+	--party-green: #2f9e63;
+	--party-yellow: #b8860f;
+	--party-pink: #d43e63;
+	--party-purple: #7c5cd6;
 	--dark: #202325;
-	--cabinet: #35393c;
-	--cabinet-deep: #202325;
-	--bg: #23262a;
-	--bg-accent: #2b2e32;
-	--surface: #35393c;
-	--surface-muted: #3d4145;
-	--surface-raised: #454a4f;
-	--surface-sunken: #1c1e20;
-	--surface-hover: #4d5257;
-	--border: rgba(255, 255, 255, 0.14);
-	--border-strong: rgba(255, 255, 255, 0.3);
-	--text: #f5f3ee;
-	--text-muted: #b9b6ad;
-	--grid: rgba(255, 255, 255, 0.06);
-	--shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.45);
-	--pixel-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.4);
+	--bg: #eef0f4;
+	--bg-accent: #e3e7f0;
+	--surface: #ffffff;
+	--surface-muted: #f4f6fa;
+	--surface-raised: #ffffff;
+	--surface-sunken: #e7eaf0;
+	--surface-hover: #eef1f6;
+	--border: rgba(20, 22, 26, 0.12);
+	--border-strong: rgba(20, 22, 26, 0.28);
+	--text: #1b1d21;
+	--text-muted: #5b6069;
+	--grid: rgba(20, 22, 26, 0.05);
+	--shadow: 4px 4px 0 0 rgba(20, 22, 26, 0.14);
+	--pixel-shadow: 5px 5px 0 0 rgba(20, 22, 26, 0.14);
 	--panel-gradient: linear-gradient(180deg, var(--surface-raised), var(--surface));
 	--panel-accent: linear-gradient(90deg, var(--accent), transparent);
 	--glow: 3px 3px 0 0 var(--accent);
@@ -44,6 +42,8 @@ html {
 
 html.dark {
 	color-scheme: dark;
+	--accent-strong: #ff9466;
+	--accent-soft: rgba(255, 127, 80, 0.18);
 	--bg: #23262a;
 	--bg-accent: #2b2e32;
 	--surface: #35393c;
@@ -100,19 +100,12 @@ h3 {
 body {
 	color: var(--text);
 	background:
-		linear-gradient(120deg, rgba(255, 127, 80, 0.16), transparent 28rem),
+		linear-gradient(120deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 28rem),
 		linear-gradient(180deg, var(--bg-accent), var(--bg) 24rem);
 	background-attachment: fixed;
 	transition:
 		background-color 0.2s,
 		color 0.2s;
-}
-
-.dark body {
-	background:
-		linear-gradient(120deg, rgba(255, 127, 80, 0.16), transparent 28rem),
-		linear-gradient(180deg, var(--bg-accent), var(--bg) 24rem);
-	background-attachment: fixed;
 }
 
 .app-shell {
@@ -223,12 +216,10 @@ button:active,
 .game-panel,
 .quest-card {
 	position: relative;
-	border: 2px solid var(--border);
-	border-radius: 3px;
-	background:
-		linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 34%),
-		var(--panel-gradient);
-	box-shadow: var(--pixel-shadow);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	background: var(--surface);
+	box-shadow: var(--shadow);
 	overflow: hidden;
 }
 
@@ -236,16 +227,10 @@ button:active,
 .quest-card::before {
 	content: '';
 	position: absolute;
-	inset: 0;
+	inset: 0 0 auto 0;
+	height: 0.2rem;
 	pointer-events: none;
-	background:
-		linear-gradient(90deg, var(--accent) 0 0.25rem, transparent 0.25rem),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 6rem),
-		repeating-linear-gradient(
-			0deg,
-			transparent 0 12px,
-			color-mix(in srgb, var(--text) 3%, transparent) 12px 13px
-		);
+	background: var(--accent);
 	opacity: 0.85;
 }
 
@@ -361,12 +346,9 @@ button:active,
 .metric-card,
 .empty-state {
 	position: relative;
-	border: 2px solid var(--border);
-	border-radius: 3px;
-	background:
-		linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 42%),
-		var(--surface);
-	box-shadow: var(--shadow);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	background: var(--surface);
 	overflow: hidden;
 }
 

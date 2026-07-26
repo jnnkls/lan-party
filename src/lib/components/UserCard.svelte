@@ -98,7 +98,7 @@
 				</div>
 			</div>
 
-			<div class="grid grid-cols-3 gap-2 text-[var(--text-muted)]">
+			<div class="stat-row text-[var(--text-muted)]">
 				<div class="stat-box">
 					<i class="fa-solid fa-user-group"></i>
 					<span class="tabular-nums">{attendanceCount}</span>
@@ -120,15 +120,25 @@
 </div>
 
 <style>
+	.stat-row {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		background: var(--surface-sunken);
+		overflow: hidden;
+	}
+
 	.stat-box {
 		display: grid;
 		gap: 0.2rem;
 		justify-items: center;
-		border: 1px solid var(--border);
-		border-radius: 4px;
-		background: var(--surface-sunken);
 		padding: 0.65rem 0.35rem;
 		text-align: center;
+	}
+
+	.stat-box + .stat-box {
+		border-left: 1px solid var(--border);
 	}
 
 	.avatar-frame::after {

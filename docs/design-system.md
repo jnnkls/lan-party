@@ -13,16 +13,20 @@
 
 - `--accent` (`#ff7f50`, coral) / `--accent-strong` (`#ff9466`) / `--accent-soft` — primary interactive color.
 - `--party-blue` / `--party-green` / `--party-yellow` / `--party-pink` / `--party-purple` — secondary accents for status/variety (tournament results, rarity, etc).
-- `--dark` / `--cabinet` (`#35393c`, graphite) / `--bg` / `--surface*` — the graphite dark palette. There is currently only one real palette (the `.dark` class variables match the root defaults) — the theme toggle exists in the UI but does not yet switch to a distinct light palette; that's a known gap, not something this pass fixed.
+- `--dark` / `--bg` / `--surface*` — surface tokens. The base `html {}` selector holds a genuinely distinct **light** palette (cool off-white surfaces, near-black text) and `html.dark {}` overrides it with the graphite palette; the theme toggle switches by adding/removing the `.dark` class on `<html>` (see `src/lib/theme.ts`). Both palettes share the same `--accent`/`--on-accent` pair, which is why the coral accent and its near-black foreground text work unchanged in either theme.
 - `--text` / `--text-muted` — foreground colors.
 
 Never hardcode Tailwind slate/amber/indigo classes — use these tokens. There used to be an `!important` compatibility shim in `app.css` translating old slate/amber classes to the token palette; it's been removed because nothing in the codebase uses those classes anymore. If you're tempted to add it back, fix the component's classes instead.
 
 ## Shape & shadow
 
-- Panels (`.game-panel`, `.quest-card`, `.screen-header`, `.command-card`, `.metric-card`, `.empty-state`) use 2px borders and a small border-radius (3px) — chunky, not fully square.
+The pixel/arcade identity is deliberately spent in a small number of places — headings, buttons, badges, and the hero `.screen-header` — rather than applied uniformly to every panel. Repeating the heaviest chrome (thick borders, scanline textures, deep shadows) on every card was the main source of visual clutter in an earlier pass; the fix was restraint, not removing the identity.
+
+- `.screen-header` (page-level hero banner) keeps the heaviest treatment: 2px border, `--pixel-shadow`, and an accent underline — it's meant to read as the "cabinet" of the page.
+- Everyday content panels (`.game-panel`, `.quest-card`, `.command-card`, `.metric-card`, `.empty-state`) use a 1px border, 4px radius, a flat surface background, and a thin accent strip along the top edge instead of a full gradient/scanline overlay. `.quest-card` (clickable list items like `LanCard`/`UserCard`) adds a hover lift + `--glow` shadow as the interactive affordance.
 - Chips/badges use a 1px border and 2px radius (they're small; a 2px border would overwhelm them).
-- Shadows (`--shadow`, `--pixel-shadow`, `--glow`) are hard-edged stepped offsets with no blur (e.g. `4px 4px 0 0 rgba(0,0,0,.45)`), not soft drop shadows — that's what reads as "pixel/cabinet" rather than generic dark-mode glow. `--glow` is accent-colored and used on hover states; buttons shift up 1px on hover and reset on `:active`, giving a physical "pressed button" feel.
+- Shadows (`--shadow`, `--pixel-shadow`, `--glow`) are hard-edged stepped offsets with no blur, not soft drop shadows — that's what reads as "pixel/cabinet" rather than generic dark-mode glow. Both alpha and offset are tuned per theme (lighter/smaller in the light palette, since a heavy black shadow reads as muddy on a white surface). `--glow` is accent-colored and used on hover states; buttons shift up 1px on hover and reset on `:active`, giving a physical "pressed button" feel.
+- Avoid nesting more than one level of bordered/background "box" inside another (e.g. a stat row split by thin dividers inside one bordered container, not three separately-chromed boxes side by side) — that box-in-box pattern was the other main clutter source.
 
 ## Component conventions
 
