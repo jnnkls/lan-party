@@ -208,7 +208,7 @@
 		font-family: 'Press Start 2P', 'Open Sans', system-ui, sans-serif;
 		font-size: 0.62rem;
 		font-weight: 400;
-		color: var(--accent);
+		color: var(--accent-strong);
 		text-transform: uppercase;
 	}
 

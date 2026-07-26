@@ -119,19 +119,7 @@
 			{#if player.attendedLANs?.length}
 				<ul class="grid gap-3">
 					{#each lanItems() as e (e.id)}
-						<LanCard
-							lan={{
-								id: e.id,
-								title: e.title,
-								date: e.date,
-								coverImage: e.coverImage,
-								description: '',
-								location: '',
-								attendees: e.attendees
-							}}
-							clickable={true}
-							showStats={true}
-						/>
+						<LanCard lan={e} clickable={true} showStats={true} />
 					{/each}
 				</ul>
 				{#if lanPageCount > 1}

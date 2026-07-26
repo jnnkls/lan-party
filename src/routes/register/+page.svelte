@@ -54,7 +54,9 @@
 			{/if}
 
 			<p class="mt-5 text-sm text-[var(--text-muted)]">
-				Already have an account? <a href="/login" class="text-[var(--accent)]">Log in</a>
+				Already have an account? <a href="/login" class="text-[var(--accent-strong)] underline"
+					>Log in</a
+				>
 			</p>
 		</div>
 	</div>

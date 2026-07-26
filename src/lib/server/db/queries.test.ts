@@ -297,6 +297,13 @@ describe('getPlayerDetail', () => {
 	it('returns null for an unknown player', async () => {
 		expect(await getPlayerDetail('does-not-exist')).toBeNull();
 	});
+
+	it('includes attendee count and games for each attended LAN', async () => {
+		const detail = await getPlayerDetail('test-p1');
+		const lan = detail!.attendedLANs?.find((l) => l.id === 'test-lan-1');
+		expect(lan?.attendees).toBe(2);
+		expect(lan?.games).toEqual(expect.arrayContaining(['Counter-Strike 2', 'Trackmania']));
+	});
 });
 
 describe('getLeaderboard', () => {

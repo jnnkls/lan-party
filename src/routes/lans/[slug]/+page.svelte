@@ -160,7 +160,7 @@
 									{#each tournament.matches as match (match.id)}
 										<li class="match-row">
 											<div class="text-sm">
-												<span class="font-display text-[0.65rem] text-[var(--accent)]"
+												<span class="font-display text-[0.65rem] text-[var(--accent-strong)]"
 													>R{match.round}</span
 												>
 												<span>{match.playerA} vs {match.playerB}</span>

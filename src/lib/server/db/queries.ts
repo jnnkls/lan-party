@@ -365,6 +365,29 @@ async function getAttendedLansForPlayers(playerIds: string[]) {
 		.innerJoin(table.lanParty, eq(table.lanAttendance.lanId, table.lanParty.id))
 		.where(inArray(table.lanAttendance.playerId, playerIds));
 
+	const lanIds = [...new Set(rows.map((row) => row.id))];
+	const [attendanceCounts, games, consoles] = await Promise.all([
+		db
+			.select({ lanId: table.lanAttendance.lanId, count: count() })
+			.from(table.lanAttendance)
+			.where(inArray(table.lanAttendance.lanId, lanIds))
+			.groupBy(table.lanAttendance.lanId),
+		db
+			.select({ lanId: table.lanGame.lanId, name: table.game.name })
+			.from(table.lanGame)
+			.innerJoin(table.game, eq(table.lanGame.gameId, table.game.id))
+			.where(inArray(table.lanGame.lanId, lanIds)),
+		db
+			.select({ lanId: table.lanConsole.lanId, name: table.consoleDevice.name })
+			.from(table.lanConsole)
+			.innerJoin(table.consoleDevice, eq(table.lanConsole.consoleId, table.consoleDevice.id))
+			.where(inArray(table.lanConsole.lanId, lanIds))
+	]);
+
+	const attendanceByLan = new Map(attendanceCounts.map((row) => [row.lanId, row.count]));
+	const gamesByLan = await groupByLan(games);
+	const consolesByLan = await groupByLan(consoles);
+
 	const map = new Map<string, LanOverview[]>();
 	for (const row of rows) {
 		const overview: LanOverview = {
@@ -375,7 +398,10 @@ async function getAttendedLansForPlayers(playerIds: string[]) {
 			description: row.description ?? undefined,
 			coverImage: row.coverImage ?? undefined,
 			status: row.status,
-			theme: row.theme ?? undefined
+			theme: row.theme ?? undefined,
+			attendees: attendanceByLan.get(row.id) ?? 0,
+			games: (gamesByLan.get(row.id) ?? []).map((g) => g.name),
+			consoleNames: (consolesByLan.get(row.id) ?? []).map((c) => c.name)
 		};
 		const list = map.get(row.playerId);
 		if (list) list.push(overview);
