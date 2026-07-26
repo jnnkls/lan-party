@@ -46,7 +46,9 @@
 			{/if}
 
 			<p class="mt-5 text-sm text-[var(--text-muted)]">
-				New here? <a href="/register" class="text-[var(--accent)]">Create an account</a>
+				New here? <a href="/register" class="text-[var(--accent-strong)] underline"
+					>Create an account</a
+				>
 			</p>
 		</div>
 	</div>

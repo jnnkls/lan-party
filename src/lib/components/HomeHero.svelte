@@ -107,7 +107,7 @@
 					class="grid grid-cols-3 gap-2 border-t border-[var(--border)] bg-[var(--surface)] p-3 text-center"
 				>
 					<div>
-						<div class="font-display text-[0.65rem] text-[var(--accent)]">XP</div>
+						<div class="font-display text-[0.65rem] text-[var(--accent-strong)]">XP</div>
 						<div class="text-sm font-bold">+250</div>
 					</div>
 					<div>

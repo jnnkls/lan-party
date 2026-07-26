@@ -10,15 +10,15 @@ html {
 	scroll-behavior: smooth;
 	color-scheme: light;
 	--accent: #ff7f50;
-	--accent-strong: #e8632f;
+	--accent-strong: #c14417;
 	--accent-soft: rgba(255, 127, 80, 0.14);
 	/* Text color for content placed on a solid accent/party-color background —
 	   those colors are all too bright for white text to hit WCAG AA contrast. */
 	--on-accent: #14161a;
 	--party-blue: #3f6fd6;
-	--party-green: #2f9e63;
-	--party-yellow: #b8860f;
-	--party-pink: #d43e63;
+	--party-green: #1a7a3d;
+	--party-yellow: #8a6009;
+	--party-pink: #c22d53;
 	--party-purple: #7c5cd6;
 	--dark: #202325;
 	--bg: #eef0f4;
