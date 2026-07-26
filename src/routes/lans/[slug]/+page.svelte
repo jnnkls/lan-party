@@ -3,7 +3,7 @@
 	import type { LanDetail } from '$lib/types';
 
 	let { data }: PageProps = $props();
-	const lan: LanDetail = data.lan as LanDetail;
+	const lan = $derived(data.lan as LanDetail);
 
 	const formatDate = (iso: string) =>
 		new Date(iso).toLocaleString(undefined, {
@@ -14,14 +14,12 @@
 			minute: '2-digit'
 		});
 
-	const statusLabel =
-		lan.status === 'ongoing'
-			? 'Live now'
-			: lan.status === 'expired'
-				? 'Archived recap'
-				: 'Upcoming';
-	const statusClass =
-		lan.status === 'ongoing' ? '' : lan.status === 'expired' ? 'expired' : 'future';
+	const statusLabel = $derived(
+		lan.status === 'ongoing' ? 'Live now' : lan.status === 'expired' ? 'Archived recap' : 'Upcoming'
+	);
+	const statusClass = $derived(
+		lan.status === 'ongoing' ? '' : lan.status === 'expired' ? 'expired' : 'future'
+	);
 </script>
 
 <section class="screen-header">

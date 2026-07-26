@@ -4,11 +4,11 @@
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
-	const ranked = data.players;
+	const ranked = $derived(data.players);
 
 	let page = $state(1);
 	const pageSize = 8;
-	const pageCount = Math.max(1, Math.ceil(ranked.length / pageSize));
+	const pageCount = $derived(Math.max(1, Math.ceil(ranked.length / pageSize)));
 	$effect(() => {
 		if (page > pageCount) page = pageCount;
 		if (page < 1) page = 1;

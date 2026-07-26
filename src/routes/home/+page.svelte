@@ -4,19 +4,24 @@
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
-	const events = data.events;
+	const events = $derived(data.events);
 
-	const now = new Date();
-	const upcoming = events
-		.filter((e) => new Date(e.date) >= now)
-		.sort((a, b) => +new Date(a.date) - +new Date(b.date));
+	const upcoming = $derived(
+		events
+			.filter((e) => new Date(e.date) >= new Date())
+			.sort((a, b) => +new Date(a.date) - +new Date(b.date))
+	);
 
-	const past = events
-		.filter((e) => new Date(e.date) < now)
-		.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+	const past = $derived(
+		events
+			.filter((e) => new Date(e.date) < new Date())
+			.sort((a, b) => +new Date(b.date) - +new Date(a.date))
+	);
 
-	const live = events.filter((e) => e.status === 'ongoing');
-	const archived = events.filter((e) => e.status === 'expired' || new Date(e.date) < now);
+	const live = $derived(events.filter((e) => e.status === 'ongoing'));
+	const archived = $derived(
+		events.filter((e) => e.status === 'expired' || new Date(e.date) < new Date())
+	);
 </script>
 
 <HomeHero

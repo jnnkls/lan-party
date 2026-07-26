@@ -6,16 +6,16 @@
 	let activeTab = $state<Tab>('overall');
 
 	let { data }: PageProps = $props();
-	const allUsers = data.users;
+	const allUsers = $derived(data.users);
 
-	const sorted = [...allUsers].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-	const top3 = sorted.slice(0, 3);
-	const others = sorted.slice(3);
-	const maxScore = Math.max(1, sorted[0]?.score ?? 1);
+	const sorted = $derived([...allUsers].sort((a, b) => (b.score ?? 0) - (a.score ?? 0)));
+	const top3 = $derived(sorted.slice(0, 3));
+	const others = $derived(sorted.slice(3));
+	const maxScore = $derived(Math.max(1, sorted[0]?.score ?? 1));
 
 	let page = $state(1);
 	const pageSize = 10;
-	const pageCount = Math.max(1, Math.ceil(others.length / pageSize));
+	const pageCount = $derived(Math.max(1, Math.ceil(others.length / pageSize)));
 	$effect(() => {
 		if (page > pageCount) page = pageCount;
 		if (page < 1) page = 1;

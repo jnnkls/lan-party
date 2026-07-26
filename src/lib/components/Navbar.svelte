@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import logo from '/logo.png';
 
 	let { user }: { user: { id: string; username: string } | null } = $props();
 
@@ -18,7 +17,7 @@
 
 <header class="nav-container">
 	<a href="/home" class="brand" aria-label="Home">
-		<img src={logo} alt="Logo" />
+		<img src="/logo.png" alt="Logo" />
 	</a>
 
 	<nav aria-label="Primary">

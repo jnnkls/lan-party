@@ -6,13 +6,15 @@
 	import type { PlayerDetail } from '$lib/types';
 
 	let { data }: PageProps = $props();
-	const player = data.player as PlayerDetail;
+	const player = $derived(data.player as PlayerDetail);
 
 	let lanPage = $state(1);
 	let tPage = $state(1);
 	const pageSize = 6;
-	const lanPageCount = Math.max(1, Math.ceil((player.attendedLANs?.length ?? 0) / pageSize));
-	const tPageCount = Math.max(1, Math.ceil((player.tournaments?.length ?? 0) / pageSize));
+	const lanPageCount = $derived(
+		Math.max(1, Math.ceil((player.attendedLANs?.length ?? 0) / pageSize))
+	);
+	const tPageCount = $derived(Math.max(1, Math.ceil((player.tournaments?.length ?? 0) / pageSize)));
 
 	$effect(() => {
 		if (lanPage > lanPageCount) lanPage = lanPageCount;
